@@ -33,7 +33,7 @@ export default function Image() {
           <span style={{ color: '#7CA9FF' }}>We question things.</span>
         </div>
         <div style={{ display: 'flex', fontSize: 28, color: '#B4BCCB' }}>
-          Web apps · APIs · MVPs · AI features — Chennai, working worldwide
+          Websites · Online stores · Apps — built in Chennai, for clients anywhere
         </div>
       </div>
     ),

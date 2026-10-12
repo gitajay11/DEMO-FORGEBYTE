@@ -4,10 +4,10 @@ export const SITE_URL = 'https://www.forgebyte.online';
 
 export const SITE_NAME = 'Forgebyte';
 
-export const SITE_TITLE = 'Forgebyte — Web app, MVP and AI product studio in Chennai';
+export const SITE_TITLE = 'Forgebyte — Websites, online stores and apps, built in Chennai';
 
 export const SITE_DESCRIPTION =
-  'A small studio building web applications, APIs, MVPs and AI features for founders, startups and small businesses. Written scope, fixed quote, weekly previews.';
+  'A small studio building websites, online stores, apps and AI chat assistants for small businesses and startups. Plain English, a fixed price, and weekly updates.';
 
 export const CONTACT_EMAIL = 'ajayak15012004@gmail.com';
 
