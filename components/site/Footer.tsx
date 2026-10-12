@@ -16,12 +16,12 @@ export default function Footer() {
           </div>
           <div className="footer-cols">
             <nav aria-label="Footer">
-              <p className="mono">Studio</p>
+              <p className="mono">Pages</p>
               <ul>
                 <li><Link href="/work">Work</Link></li>
                 <li><Link href="/services">Services</Link></li>
-                <li><Link href="/studio">Studio</Link></li>
-                <li><Link href="/lab">Lab</Link></li>
+                <li><Link href="/studio">About us</Link></li>
+                <li><Link href="/lab">Demos</Link></li>
                 <li><Link href="/contact">Contact</Link></li>
               </ul>
             </nav>
@@ -40,8 +40,7 @@ export default function Footer() {
         <div className="footer-meta">
           <div className="group">
             <StudioClock />
-            <span className="mono">{studio.coords}</span>
-            <span className="mono live">Accepting projects · {studio.availability}</span>
+            <span className="mono live">Taking on new projects · {studio.availability}</span>
           </div>
           <div className="group">
             <PrefToggles />

@@ -1,42 +1,37 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { caseStudies, lab, studio } from '@/lib/content';
+import { studio } from '@/lib/content';
 import { Reveal, Words } from '@/components/motion/Text';
 import { LazyPortrait as Portrait } from '@/components/lazy';
-import ToolsMap from '@/components/studio/ToolsMap';
 
 export const metadata: Metadata = {
-  title: 'Studio',
-  description: `${studio.name} is an independent studio in ${studio.city}, led by ${studio.founder}. How we work, what we believe, and the tools we use.`,
+  title: 'About us',
+  description: `${studio.name} is a small studio in ${studio.city}, run by ${studio.founder}. How we work and what you can expect.`,
   alternates: { canonical: '/studio' },
 };
 
 const PRINCIPLES = [
-  { t: 'Ask why before how.', b: 'The cheapest bug is the feature we talked you out of building.' },
-  { t: 'Boring is a feature.', b: 'Reliable, predictable software beats clever software that needs a babysitter.' },
-  { t: 'Say no early.', b: 'If a deadline or scope cannot hold, you hear it in week one, not week six.' },
-  { t: 'You own everything.', b: 'Code, accounts and documentation are yours. No lock-in, no hostage hosting.' },
-  { t: 'Small by design.', b: 'One accountable person who knows the whole system, not a relay of hand-offs.' },
+  { t: 'We ask “why” first.', b: 'The cheapest feature is the one we help you realise you don’t need.' },
+  { t: 'Simple beats clever.', b: 'A site that just works, every day, is worth more than a flashy one that breaks.' },
+  { t: 'Bad news early.', b: 'If a date or budget won’t work, you hear it in week one — not week six.' },
+  { t: 'You own everything.', b: 'Your site, your accounts and your files are yours. No lock-in.' },
+  { t: 'One person who knows it all.', b: 'You deal with the person building it, not a chain of hand-offs.' },
 ];
 
-// Where each tool was actually used, derived from project stacks.
-const used = (tool: string) =>
-  [...caseStudies, ...lab].filter((p) => p.stack.some((s) => s.toLowerCase().includes(tool.toLowerCase()))).map((p) => p.title);
-
-const GROUPS = [
-  { name: 'Interfaces', tools: ['React', 'Next.js', 'TypeScript', 'Tailwind', 'Framer Motion', 'PWA'] },
-  { name: 'Backends', tools: ['Node', 'Express', 'Hono', 'Prisma', 'Nodemailer', 'Groq'] },
-  { name: 'Data & payments', tools: ['PostgreSQL', 'Razorpay', 'Formspree'] },
-  { name: 'Ship & run', tools: ['Vercel', 'Vite', 'HTML', 'CSS'] },
-].map((g) => ({ name: g.name, tools: g.tools.map((name) => ({ name, usedIn: used(name) })) }));
+const WORKING_WITH_US = [
+  { t: 'Plain English', b: 'No jargon. If we use a technical word, we explain it.' },
+  { t: 'A fixed price', b: 'You get a written price before work starts. It only changes if what you want changes.' },
+  { t: 'Weekly updates', b: 'A link to see progress every week, so nothing is a surprise at the end.' },
+  { t: 'Help after launch', b: 'We stay around after your site goes live to fix anything that comes up.' },
+];
 
 export default function StudioPage() {
   return (
     <>
       <section className="page-hero container">
-        <p className="mono" style={{ marginBottom: 'var(--s-5)' }}>[01] — Studio</p>
-        <h1 className="display-xl"><Words text="Problem solvers, not code typists." /></h1>
-        <p className="lede">You are not buying hours of typing. You are buying better decisions.</p>
+        <p className="mono" style={{ marginBottom: 'var(--s-5)' }}>01 — About us</p>
+        <h1 className="display-xl"><Words text="Problem solvers first." /></h1>
+        <p className="lede">You&apos;re not paying for hours of typing. You&apos;re paying for good decisions about what to build.</p>
       </section>
 
       <section className="section container" aria-labelledby="founder-h">
@@ -48,17 +43,15 @@ export default function StudioPage() {
           <div className="founder-body">
             <h2 id="founder-h" className="display-l" style={{ marginBottom: 'var(--s-6)' }}>{studio.founder}</h2>
             <Reveal as="p" variant="blur">
-              {studio.name} is {studio.founderFirst}&apos;s studio. Every project is led by {studio.founderFirst}, from the first
-              call to the handover — no account managers, no hand-offs to someone you have not met.
+              {studio.name} is {studio.founderFirst}&apos;s studio. {studio.founderFirst} runs every project personally, from the first
+              call to the day it goes live — no middlemen.
             </Reveal>
             <p>
-              {studio.founderFirst} cares about the parts users never see: the query that stays fast, the deploy that does not
-              wake anyone up, the error message that actually helps. Comfortable across the stack — React and TypeScript on
-              the front, Node and Postgres behind it.
+              {studio.founderFirst} cares about the details most people never notice: pages that load fast on any phone, checkouts
+              that don&apos;t break, and messages that make sense to your customers.
             </p>
             <p>
-              Based in {studio.city} ({studio.tzLabel}), working with clients remotely. Available for new projects from{' '}
-              {studio.availability}.
+              Based in {studio.city}, working with clients anywhere. Taking on new projects from {studio.availability}.
             </p>
             <p className="quirk">Bring the hard question first. It saves everyone a meeting.</p>
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
@@ -83,12 +76,18 @@ export default function StudioPage() {
         </div>
       </section>
 
-      <section className="section container" aria-labelledby="tools-h">
-        <h2 id="tools-h" className="display-l" style={{ marginBottom: 'var(--s-7)' }}>Tools, and where they were used</h2>
-        <ToolsMap groups={GROUPS} />
+      <section className="section container" aria-labelledby="working-h">
+        <h2 id="working-h" className="display-l" style={{ marginBottom: 'var(--s-7)' }}>What working with us is like</h2>
+        <div className="promises">
+          {WORKING_WITH_US.map((w) => (
+            <div key={w.t}>
+              <h3>{w.t}</h3>
+              <p>{w.b}</p>
+            </div>
+          ))}
+        </div>
         <p className="body" style={{ marginTop: 'var(--s-7)' }}>
-          We pick tools your team can maintain after we leave. If a simpler stack does the job, that is the one you get.{' '}
-          <Link href="/contact" className="ulink" data-track="cta_click:studio">Start a project →</Link>
+          Got something in mind? <Link href="/contact" className="ulink" data-track="cta_click:studio">Tell us about it →</Link>
         </p>
       </section>
     </>

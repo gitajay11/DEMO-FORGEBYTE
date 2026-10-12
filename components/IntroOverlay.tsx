@@ -76,8 +76,8 @@ export default function IntroOverlay() {
   return (
     <div id="introOverlay" className={hidden ? 'hide' : undefined} aria-hidden="true">
       <div className="intro-meta top">
-        <span className="mono">[00] — {studio.name}</span>
-        <span className="mono">{studio.coords}</span>
+        <span className="mono">{studio.name}</span>
+        <span className="mono">{studio.city}, {studio.country}</span>
       </div>
       <div className="intro-letters">
         {WORDS.map((word, i) => (
@@ -91,7 +91,7 @@ export default function IntroOverlay() {
         ))}
       </div>
       <div className="intro-meta bottom">
-        <span className="mono">{studio.city} · {studio.tzLabel}</span>
+        <span className="mono">Websites · Online stores · Apps</span>
         <button className="intro-skip" type="button" onClick={closeIntro}>
           Skip →
         </button>

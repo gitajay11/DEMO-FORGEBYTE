@@ -42,7 +42,7 @@ export function ThemeCycle() {
   };
   return (
     <button className="toggle" onClick={cycle} aria-label={`Theme: ${mode}. Change theme`}>
-      Theme: <b>{mode}</b>
+      Theme: <b>{mode === 'auto' ? 'match device' : mode}</b>
     </button>
   );
 }

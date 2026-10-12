@@ -1,9 +1,12 @@
-// All site copy and project data. Pages and scenes read from here, so editing
-// content never means touching layout or animation code.
+// All site copy and project data. Pages read from here, so editing content
+// never means touching layout or animation code.
+//
+// Voice: plain English for people who don't build software. Say what it does
+// for the customer; keep tool names out of the main text.
 //
 // Integrity rule (see docs/AUDIT.md): nothing here may claim a client, metric,
-// testimonial or credential that isn't real. Anything unconfirmed is marked
-// `confirm: true` and listed in the audit.
+// testimonial or credential that isn't real. Unconfirmed values are listed in
+// docs/HANDOVER.md.
 
 export const studio = {
   name: 'Forgebyte',
@@ -13,11 +16,10 @@ export const studio = {
   city: 'Chennai',
   country: 'India',
   timeZone: 'Asia/Kolkata',
-  tzLabel: 'IST · UTC+5:30',
-  coords: '13.08°N 80.27°E',
+  tzLabel: 'India time (IST)',
   availability: 'Q4 2026',
   replyWithin: '1 working day',
-  idealClients: 'founders, early-stage startups and small businesses',
+  idealClients: 'small businesses, startups and founders',
   github: 'https://github.com/gitajay11',
   linkedin: 'https://www.linkedin.com/in/ajayak1501',
 } as const;
@@ -42,68 +44,68 @@ export type Service = {
 
 export const services: Service[] = [
   {
-    slug: 'web-applications',
+    slug: 'websites-and-web-apps',
     index: '01',
-    name: 'Web applications',
-    short: 'Web app',
-    promise: 'The product your users log into every day, built to stay fast and boring to run.',
-    problem: 'You have a working idea or an internal process outgrowing spreadsheets, and need software people can rely on.',
-    deliverables: ['Written scope and fixed quote', 'Production app on your own hosting', 'Admin tools where you need them', 'Handover notes and access'],
-    duration: '6–12 weeks, typical',
-    fitIf: 'you know who the users are and what they need to get done.',
-    notFitIf: 'you need a large team on a multi-year platform from day one.',
+    name: 'Websites & web apps',
+    short: 'Website or app',
+    promise: 'A website or online tool your customers find easy to use, built to keep working.',
+    problem: 'You have an idea, or a way of working that has outgrown spreadsheets and WhatsApp, and you need something people can rely on.',
+    deliverables: ['A written plan and a fixed price', 'Your site or app, live online', 'Simple admin screens to manage it', 'Logins and notes handed over to you'],
+    duration: 'Usually 6–12 weeks',
+    fitIf: 'you know who your customers are and what they need to get done.',
+    notFitIf: 'you need a large team building a huge platform for years.',
     glyph: 'cube',
   },
   {
-    slug: 'apis-and-backends',
+    slug: 'online-stores',
     index: '02',
-    name: 'APIs & backend systems',
-    short: 'API / backend',
-    promise: 'Clear contracts, sane errors and data that stays correct.',
-    problem: 'Your frontend, your partners or your mobile app need a backend that does not fall over or drift out of sync.',
-    deliverables: ['Data model and schema', 'Documented API', 'Payments, email and third-party integrations', 'Monitoring basics'],
-    duration: '3–8 weeks, typical',
-    fitIf: 'the rules of your business are known, even if they are messy.',
-    notFitIf: 'you need a managed team on call 24/7.',
+    name: 'Online stores & payments',
+    short: 'Online store',
+    promise: 'Sell online with a store that takes payments safely and is easy for you to run.',
+    problem: 'You want customers to browse, order and pay online — and you need to manage orders and stock without calling a developer.',
+    deliverables: ['Product pages and a cart', 'Card, UPI or cash-on-delivery payments', 'Order emails for you and your customer', 'A simple screen to manage orders and stock'],
+    duration: 'Usually 4–10 weeks',
+    fitIf: 'you already sell, or are ready to, and know your products and prices.',
+    notFitIf: 'you need a marketplace with thousands of sellers on day one.',
     glyph: 'torus',
   },
   {
-    slug: 'mvp-sprints',
+    slug: 'quick-first-versions',
     index: '03',
-    name: 'MVP sprints',
-    short: 'MVP sprint',
-    promise: 'A working, testable product in weeks, so you can learn before you spend more.',
-    problem: 'You need to put something real in front of users or investors without committing to a full build.',
-    deliverables: ['One core flow, end to end', 'Deployed and shareable', 'A list of what we cut and why', 'A plan for what comes next'],
-    duration: '4–6 weeks, typical',
-    fitIf: 'you are willing to cut scope hard to learn faster.',
-    notFitIf: 'every feature on the list is non-negotiable.',
+    name: 'Quick first versions',
+    short: 'First version',
+    promise: 'A simple working version in a few weeks, so you can test your idea before spending more.',
+    problem: 'You want to show something real to customers or investors without paying for the full thing yet.',
+    deliverables: ['The one most important feature, working', 'Live online and easy to share', 'A list of what we left out, and why', 'A plan for what comes next'],
+    duration: 'Usually 4–6 weeks',
+    fitIf: 'you are happy to start small and learn quickly.',
+    notFitIf: 'every feature on your list must be there at launch.',
     glyph: 'octa',
   },
   {
-    slug: 'ai-features',
+    slug: 'smart-assistants',
     index: '04',
-    name: 'AI features in products',
-    short: 'AI feature',
-    promise: 'Language models where they help, with guardrails where they could embarrass you.',
-    problem: 'You want an assistant, search or automation in your product without it inventing facts or leaking cost.',
-    deliverables: ['A scoped assistant or workflow', 'Prompt and data guardrails', 'Cost and rate limits', 'Fallbacks when the model is down'],
-    duration: '2–6 weeks, typical',
-    fitIf: 'you can name the task the model should do, and what it must never do.',
-    notFitIf: 'the goal is "add AI" without a job for it.',
+    name: 'Smart assistants (AI)',
+    short: 'AI assistant',
+    promise: 'A chat assistant that answers your customers’ questions — without making things up.',
+    problem: 'You get the same questions every day, or want help sorting enquiries, and you have heard AI can help.',
+    deliverables: ['An assistant trained on your own information', 'Rules for what it must never say', 'Limits so costs stay predictable', 'A fallback to a real person'],
+    duration: 'Usually 2–6 weeks',
+    fitIf: 'you can say exactly what the assistant should help with.',
+    notFitIf: 'the goal is just to "add AI" without a clear job for it.',
     glyph: 'icosa',
   },
   {
-    slug: 'ongoing-support',
+    slug: 'care-after-launch',
     index: '05',
-    name: 'Ongoing support',
-    short: 'Support',
-    promise: 'Fixes, small features and upkeep after launch, so the product keeps moving.',
-    problem: 'Your product is live and the person who built it is gone, busy, or was us.',
-    deliverables: ['Agreed monthly hours', 'Bug fixes and dependency updates', 'Small features', 'A written log of what changed'],
+    name: 'Care after launch',
+    short: 'Ongoing care',
+    promise: 'Fixes, updates and small improvements after launch, so your site keeps working.',
+    problem: 'Your site is live and the person who built it is gone, busy — or was us.',
+    deliverables: ['An agreed number of hours each month', 'Fixes and security updates', 'Small new features', 'A written note of every change'],
     duration: 'Monthly',
-    fitIf: 'you want one accountable person who knows the code.',
-    notFitIf: 'you need guaranteed response times overnight.',
+    fitIf: 'you want one person you can call who knows how it all works.',
+    notFitIf: 'you need someone on call through the night.',
     glyph: 'ring',
   },
 ];
@@ -112,8 +114,6 @@ export const services: Service[] = [
 /* Work                                                                 */
 /* ------------------------------------------------------------------ */
 
-export type WorldKind = 'bubbles' | 'grain' | 'circuit' | 'shade' | 'steam' | 'pulse';
-
 export type CaseStudy = {
   slug: string;
   title: string;
@@ -121,14 +121,11 @@ export type CaseStudy = {
   industry: string;
   year: string;
   role: string;
-  duration: string;
-  stack: string[];
+  stack: string[]; // shown only as a small "Built with" line
   status: 'Live' | 'Under testing' | 'In progress';
   url: string;
   image: string;
   imageAlt: string;
-  world: WorldKind;
-  tint: string; // desaturated, confined to the project's scene
   oneLiner: string;
   problem: string;
   questions: string[];
@@ -136,7 +133,7 @@ export type CaseStudy = {
   build: string[];
   outcome: string;
   services: string[]; // service slugs, for /work filters
-  confirm: true; // year, role and duration still to be confirmed by the owner
+  confirm: true; // year and role still to be confirmed by the owner
 };
 
 export const caseStudies: CaseStudy[] = [
@@ -144,134 +141,122 @@ export const caseStudies: CaseStudy[] = [
     slug: 'loopa',
     title: 'Loopa',
     client: 'Loopa (Nutriyah)',
-    industry: 'Food & beverage',
+    industry: 'Food & drink',
     year: '2026',
-    role: 'Design & development',
-    duration: '—',
+    role: 'Design & build',
     stack: ['HTML', 'CSS', 'JavaScript', 'Formspree'],
     status: 'Live',
     url: 'https://loopa.nutriyah.com/',
     image: '/work/loopa.png',
     imageAlt: 'Loopa homepage: a green sparkling drink bottle beside the headline "Be in the Moment"',
-    world: 'bubbles',
-    tint: '#9CC7A4',
-    oneLiner: 'A sparkling drinks brand site that turns distributor interest into quote requests.',
-    problem: 'A new natural sparkling drink needed to look credible to shoppers and to the distributors who decide whether it reaches a shelf at all.',
+    oneLiner: 'A website for a sparkling drinks brand that turns shop and distributor interest into orders.',
+    problem: 'A new natural sparkling drink needed to look trustworthy to shoppers — and to the distributors who decide whether it ever reaches a shelf.',
     questions: [
-      'Who places the first real order: a shopper or a distributor?',
-      'What does a distributor need to see before they ask for a price?',
-      'Which claims about ingredients can be shown, not just stated?',
+      'Who places the first big order: a shopper or a distributor?',
+      'What does a distributor need to see before asking for a price?',
+      'How can we show what is in the bottle, not just say it?',
     ],
     approach: [
-      { title: 'Two audiences, one page', body: 'Flavour and mood up front for shoppers; a bulk-order path that is never more than one click away for trade buyers.' },
-      { title: 'Transparency as content', body: 'An ingredient section that shows what is in the bottle instead of adjectives about it.' },
-      { title: 'No backend to maintain', body: 'A static site with a hosted form service, so enquiries arrive by email with nothing to keep running.' },
+      { title: 'Two kinds of visitor, one site', body: 'Flavours and mood up front for shoppers, and an easy bulk-order route for trade buyers on every page.' },
+      { title: 'Show the ingredients', body: 'A clear section showing what is in the drink, instead of vague claims.' },
+      { title: 'Nothing to maintain', body: 'Bulk-order requests arrive straight in the inbox, with no system to keep running.' },
     ],
-    build: ['Static HTML, CSS and JavaScript', 'Flavour pages and ingredient-transparency section', 'Bulk-order form posting to Formspree as quote requests'],
-    outcome: 'Live at loopa.nutriyah.com, taking distributor enquiries as structured quote requests.',
-    services: ['web-applications'],
+    build: ['Flavour pages', 'An ingredients section', 'A bulk-order form that sends quote requests by email'],
+    outcome: 'Live at loopa.nutriyah.com, receiving bulk-order requests from distributors.',
+    services: ['websites-and-web-apps'],
     confirm: true,
   },
   {
     slug: 'nutriyah',
     title: 'Nutriyah',
     client: 'Nutriyah',
-    industry: 'Food & beverage',
+    industry: 'Food & drink',
     year: '2026',
-    role: 'Design & development',
-    duration: '—',
+    role: 'Design & build',
     stack: ['HTML', 'CSS', 'JavaScript', 'Vercel'],
     status: 'Live',
     url: 'https://www.nutriyah.com/',
     image: '/work/nutriyah.png',
     imageAlt: 'Nutriyah homepage with the headline "Developing the next generation of food products"',
-    world: 'grain',
-    tint: '#C9B98F',
-    oneLiner: 'A company site built to open conversations with distributors and trade partners.',
-    problem: 'The parent food and beverage company needed one place that explained what it does and made trade partners want to talk.',
+    oneLiner: 'A company website built to start conversations with distributors and trade partners.',
+    problem: 'The parent food and drink company needed one place that explained what it does and made trade partners want to get in touch.',
     questions: [
       'What does a trade partner need to trust a young company?',
-      'How much should the parent brand say, and how much should its products say?',
-      'Where does a conversation start: a form, an email, or a call?',
+      'How much should the company say, and how much should its products say?',
+      'How should a conversation start: a form, an email or a call?',
     ],
     approach: [
-      { title: 'Capabilities over claims', body: 'Mission, capabilities and portfolio laid out plainly, so a buyer can judge fit in one read.' },
-      { title: 'Room for products', body: 'A portfolio structure that product brands like Loopa can slot into as they launch.' },
-      { title: 'Fast by default', body: 'Static pages on Vercel: quick on any connection, nothing to patch.' },
+      { title: 'Show, don’t boast', body: 'What the company does and makes, laid out plainly so a buyer can judge it in one read.' },
+      { title: 'Room to grow', body: 'A product section that new brands, like Loopa, can slot into as they launch.' },
+      { title: 'Fast everywhere', body: 'Pages that load quickly even on a slow phone connection.' },
     ],
-    build: ['Static site deployed on Vercel', 'Mission, capabilities and product portfolio sections', 'Clear contact routes for trade enquiries'],
-    outcome: 'Live at nutriyah.com as the company’s main trade-facing site.',
-    services: ['web-applications'],
+    build: ['About, capabilities and product pages', 'Clear ways for trade buyers to get in touch'],
+    outcome: 'Live at nutriyah.com as the company’s main website for trade partners.',
+    services: ['websites-and-web-apps'],
     confirm: true,
   },
   {
     slug: 'sri-cauvery-electronics',
     title: 'Sri Cauvery Electronics',
     client: 'Sri Cauvery Electronics, Madurai',
-    industry: 'Retail & e-commerce',
+    industry: 'Retail',
     year: '2026',
-    role: 'Design & development',
-    duration: '—',
-    stack: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'PWA'],
+    role: 'Design & build',
+    stack: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
     status: 'Under testing',
     url: 'https://www.sricauveryelectronics.shop/',
     image: '/work/sri-cauvery-electronics.png',
     imageAlt: 'Sri Cauvery Electronics homepage with the headline "Everyday electronics. Unforgettable gifts."',
-    world: 'circuit',
-    tint: '#C7A85A',
-    oneLiner: 'A bilingual Tamil/English store with cash-on-delivery checkout and its own admin app.',
-    problem: 'A Madurai electronics and return-gifts shop wanted to sell online to customers who read Tamil first and often prefer paying on delivery.',
+    oneLiner: 'An online shop in Tamil and English, with cash on delivery and an easy app for the owner.',
+    problem: 'A Madurai electronics and gift shop wanted to sell online to customers who read Tamil first and often prefer to pay on delivery.',
     questions: [
       'Which language does a customer think in when they shop?',
-      'What payment method removes the most hesitation for a first order?',
-      'Who updates stock and orders, and on what device?',
+      'Which way of paying makes a first order feel safest?',
+      'Who updates stock and orders, and on which device?',
     ],
     approach: [
-      { title: 'Tamil and English, side by side', body: 'A language switch that changes the whole store, not just the menu.' },
-      { title: 'Cash on delivery first', body: 'Checkout built around how this shop’s customers already prefer to pay.' },
-      { title: 'An admin the owner will use', body: 'A separate installable app for orders and stock, sharing one PostgreSQL database with the store.' },
+      { title: 'Tamil and English, side by side', body: 'One tap switches the whole shop between Tamil and English, not just the menu.' },
+      { title: 'Cash on delivery first', body: 'Checkout built around how this shop’s customers already like to pay.' },
+      { title: 'An app the owner will use', body: 'A separate app on the owner’s phone to manage orders and stock.' },
     ],
-    build: ['Next.js storefront and admin as separate PWAs', 'Prisma over PostgreSQL, one shared database', 'Catalogue, cart and cash-on-delivery checkout', 'Installable on phones'],
-    outcome: 'Built and under testing before launch. No live sales figures yet.',
-    services: ['web-applications', 'apis-and-backends'],
+    build: ['Product catalogue, cart and checkout', 'Tamil / English switch', 'Cash on delivery', 'A phone-friendly admin app for orders and stock', 'Can be installed on a phone like an app'],
+    outcome: 'Built and being tested before launch. No sales figures yet.',
+    services: ['online-stores', 'websites-and-web-apps'],
     confirm: true,
   },
   {
     slug: 'elare-beauty',
     title: 'Élaré Beauty',
     client: 'Élaré Beauty',
-    industry: 'Beauty & e-commerce',
+    industry: 'Beauty',
     year: '2026',
-    role: 'Design & development',
-    duration: '—',
-    stack: ['React', 'TypeScript', 'Hono', 'PostgreSQL', 'Razorpay', 'PWA'],
+    role: 'Design & build',
+    stack: ['React', 'TypeScript', 'PostgreSQL', 'Razorpay'],
     status: 'In progress',
     url: 'https://www.elarebeauty.store/',
     image: '/work/elare-beauty.jpg',
     imageAlt: 'Élaré Beauty homepage: a model beside the headline "Beauty, defined by you."',
-    world: 'shade',
-    tint: '#C9A3A8',
-    oneLiner: 'A premium makeup store with online and cash-on-delivery checkout, and a back-office to run it.',
-    problem: 'A makeup brand needed a storefront that feels premium, takes payments safely, and can be run day to day without a developer.',
+    oneLiner: 'A premium makeup store with safe online payments and a back office to run it.',
+    problem: 'A makeup brand needed a store that feels premium, takes payments safely, and can be run day to day without a developer.',
     questions: [
       'How does someone choose a shade they cannot try on?',
-      'Which payment failures can we recover from instead of losing the order?',
-      'Which business rules must never be bypassed, even by a bug?',
+      'If a payment fails, how do we keep the order instead of losing it?',
+      'Which shop rules must never be broken, even by mistake?',
     ],
     approach: [
-      { title: 'Rules in the database', body: 'Business rules live in SQL functions with row-level security, so the API cannot quietly skip them.' },
-      { title: 'Payments that can be finished later', body: 'Razorpay orders are verified server-side; an unpaid online order can be paid later from the order page.' },
-      { title: 'Two sites, one system', body: 'A customer storefront and an admin back-office sharing typed packages in one monorepo.' },
+      { title: 'Rules that can’t be skipped', body: 'Prices, stock and discounts are checked in one safe place, so mistakes can’t slip through.' },
+      { title: 'Payments that can be finished later', body: 'If an online payment fails, the customer can pay later from their order page.' },
+      { title: 'A store and a back office', body: 'A shop for customers and a separate back office for the team, working together.' },
     ],
-    build: ['React storefront and admin (Vite, Tailwind)', 'Hono API on Neon Functions, Postgres with RLS', 'Razorpay checkout with signature verification, plus cash on delivery', 'Order-confirmation email over SMTP', 'Installable PWA'],
-    outcome: 'In active development. Not yet launched.',
-    services: ['web-applications', 'apis-and-backends'],
+    build: ['A shop for customers', 'Card and UPI payments, plus cash on delivery', 'Order confirmation emails', 'A back office for orders and products', 'Can be installed on a phone like an app'],
+    outcome: 'Being built now. Not launched yet.',
+    services: ['online-stores', 'websites-and-web-apps'],
     confirm: true,
   },
 ];
 
 /* ------------------------------------------------------------------ */
-/* Lab — demos and concept builds, labelled as such                     */
+/* Lab — demos and experiments, labelled as such                        */
 /* ------------------------------------------------------------------ */
 
 export type LabItem = {
@@ -283,46 +268,38 @@ export type LabItem = {
   url: string;
   image: string;
   imageAlt: string;
-  world: WorldKind;
-  tint: string;
 };
 
 export const lab: LabItem[] = [
   {
     slug: 'ember-and-oak',
     title: 'Ember & Oak',
-    kind: 'Concept site · demo',
-    body: 'A coffee house site: video hero, scroll-driven menu and a table-reservation flow. Built to show what a hospitality site can feel like.',
+    kind: 'Demo website',
+    body: 'A café website with a moving video, a menu and table booking. Built to show what a restaurant or café site can feel like.',
     stack: ['React', 'Vite', 'Tailwind', 'Framer Motion'],
     url: 'https://cafecaffeine.vercel.app/',
     image: '/work/ember-and-oak.jpg',
     imageAlt: 'Ember & Oak homepage: espresso pouring behind the headline "Coffee, crafted slowly."',
-    world: 'steam',
-    tint: '#B08A6A',
   },
   {
     slug: 'care-dental',
     title: 'Care Dental',
-    kind: 'Concept site · demo',
-    body: 'A dental clinic site with doctors, a patient journey and an appointment form that emails the clinic through a small Express backend.',
+    kind: 'Demo website',
+    body: 'A dental clinic website with doctors, treatments and an appointment form that emails the clinic straight away.',
     stack: ['React', 'Vite', 'Express', 'Nodemailer'],
     url: 'https://cleardental.vercel.app/',
     image: '/work/care-dental.jpg',
     imageAlt: 'Care Dental homepage: a smiling patient beside the headline "Dental Care"',
-    world: 'pulse',
-    tint: '#9DB3C2',
   },
   {
     slug: 'site-assistant',
     title: 'This site’s assistant',
-    kind: 'Experiment · live here',
-    body: 'The chat in the corner: scripted answers, plus an AI mode that refuses to quote prices and forwards contact details only when you give them.',
-    stack: ['Next.js route', 'Groq', 'Nodemailer'],
+    kind: 'Try it here',
+    body: 'The chat button in the corner of this page. It answers common questions, never quotes prices, and passes your details on only if you share them.',
+    stack: ['Next.js', 'Groq', 'Nodemailer'],
     url: '#chat',
-    image: '',
-    imageAlt: '',
-    world: 'pulse',
-    tint: '#7CA9FF',
+    image: '/work/site-assistant.jpg',
+    imageAlt: 'The Forgebyte chat assistant open, showing suggested questions',
   },
 ];
 
@@ -331,11 +308,11 @@ export const lab: LabItem[] = [
 /* ------------------------------------------------------------------ */
 
 export const process = [
-  { name: 'Discover', what: 'A short call about the problem, the users and what success looks like. We ask the awkward questions here.', receive: 'A summary of what we heard', time: '1–3 days' },
-  { name: 'Define', what: 'We turn the call into a scope: what is in, what is out, and what it costs.', receive: 'A written scope with a fixed quote', time: '2–5 days' },
-  { name: 'Design & build', what: 'Iterative work with a check-in every week, so you see progress, not just a deadline.', receive: 'A working preview link, updated weekly', time: 'Per scope' },
-  { name: 'Test & ship', what: 'QA, performance checks and a production deploy once it holds up.', receive: 'The live product and its access', time: '~1 week' },
-  { name: 'Support', what: 'A window after launch to fix what comes up, then a clean handover.', receive: 'Notes, credentials and a change log', time: 'Agreed per project' },
+  { name: 'Talk', what: 'A short call about your business, your customers and what success looks like. We ask the awkward questions here.', receive: 'A short summary of what we heard', time: '1–3 days' },
+  { name: 'Plan', what: 'We write down what will be built, what won’t, and what it costs.', receive: 'A written plan with a fixed price', time: '2–5 days' },
+  { name: 'Design & build', what: 'We build in small steps and show you progress every week, so there are no surprises at the end.', receive: 'A link to the work in progress, updated weekly', time: 'Depends on the plan' },
+  { name: 'Test & launch', what: 'We check everything works on phones and computers, then put it live.', receive: 'Your live site and all its logins', time: 'About a week' },
+  { name: 'Look after it', what: 'We stay on after launch to fix anything that comes up, then hand everything over.', receive: 'Notes, logins and a list of changes', time: 'Agreed per project' },
 ] as const;
 
 /* ------------------------------------------------------------------ */
@@ -343,10 +320,10 @@ export const process = [
 /* ------------------------------------------------------------------ */
 
 export const engagements = [
-  { name: 'Discovery call', includes: 'A short conversation about the problem, then a written next step.', duration: 'One call', price: 'No obligation' },
-  { name: 'Fixed-scope build', includes: 'A written scope, a fixed quote, weekly previews and a production launch.', duration: '3–12 weeks', price: 'Quoted per scope' },
-  { name: 'MVP sprint', includes: 'One core flow, end to end, deployed and shareable.', duration: '4–6 weeks', price: 'Quoted per scope' },
-  { name: 'Ongoing support', includes: 'Agreed monthly hours for fixes, updates and small features.', duration: 'Monthly', price: 'Monthly rate' },
+  { name: 'First chat', includes: 'A short conversation about what you need, then a written next step.', duration: 'One call', price: 'No obligation' },
+  { name: 'Fixed-price project', includes: 'A written plan, a fixed price, weekly updates and a launch.', duration: '3–12 weeks', price: 'Quoted per project' },
+  { name: 'Quick first version', includes: 'Your most important feature, working and live.', duration: '4–6 weeks', price: 'Quoted per project' },
+  { name: 'Monthly care', includes: 'Agreed hours each month for fixes, updates and small changes.', duration: 'Monthly', price: 'Monthly fee' },
 ] as const;
 
 /* ------------------------------------------------------------------ */
@@ -354,13 +331,13 @@ export const engagements = [
 /* ------------------------------------------------------------------ */
 
 export const faq = [
-  { q: 'How long does a project take?', a: 'Most builds land between 3 and 12 weeks. You get a firm timeline in the written scope, before any work starts.' },
-  { q: 'What does it cost?', a: 'Every build is scoped and quoted individually. You get a fixed quote in writing, so the number does not move unless the scope does.' },
-  { q: 'Who owns the code?', a: 'You do. Code, accounts and intellectual property transfer to you on final payment.' },
-  { q: 'Will you sign an NDA?', a: 'Yes. Send it over before the discovery call if you need one.' },
-  { q: 'How do we communicate?', a: 'A weekly check-in with a preview link, plus email or WhatsApp in between. You always know what is being built and why.' },
-  { q: 'You are in India. What about time zones?', a: 'We work on IST (UTC+5:30). That overlaps with UK and European mornings and US evenings, and we plan check-ins around your day.' },
-  { q: 'What happens after launch?', a: 'Every project includes a support window. After that, you can move to monthly support or take the handover notes and run it yourselves.' },
-  { q: 'Which technology will you use?', a: 'Usually TypeScript, Next.js or React, Node and PostgreSQL, deployed on Vercel. We pick what your team can maintain, not what is fashionable.' },
-  { q: 'What do you need from us?', a: 'One person who can make decisions, access to the people who will use the product, and quick answers during the build.' },
+  { q: 'How long will it take?', a: 'Most projects take between 3 and 12 weeks. You get a firm timeline in writing before any work starts.' },
+  { q: 'How much does it cost?', a: 'Every project is priced on its own. You get a fixed price in writing, and it only changes if you change what you want built.' },
+  { q: 'Who owns the website when it’s done?', a: 'You do. The site, the accounts and everything we make for you are handed over to you once the final payment is made.' },
+  { q: 'Do I need to understand technology?', a: 'No. We explain everything in plain language and make the technical decisions with you, not at you.' },
+  { q: 'Will you sign an NDA?', a: 'Yes. Send it over before our first call if you need one.' },
+  { q: 'How will we keep in touch?', a: 'A weekly update with a link to see progress, plus email or WhatsApp in between.' },
+  { q: 'You’re in India. What about time zones?', a: 'We work on India time (IST). That overlaps with UK and European mornings and US evenings, and we plan calls around your day.' },
+  { q: 'What happens after launch?', a: 'Every project includes a period of support after launch. After that, you can choose monthly care or run it yourselves with our handover notes.' },
+  { q: 'What do you need from me?', a: 'One person who can make decisions, a little time each week to look at progress, and quick answers when we have questions.' },
 ] as const;

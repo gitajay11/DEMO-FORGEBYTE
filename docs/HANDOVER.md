@@ -14,7 +14,8 @@ A full copy of the pre-redesign project is at `C:\Users\ajaya\Projects\backup fo
 | Reply time | Within 1 working day | `studio.replyWithin` |
 | Project years / role | 2026 · Design & development, for all four | `caseStudies[].year`, `.role` |
 | Élaré Beauty | Shown as a client project, "In progress" | `caseStudies` |
-| AI service line | "AI features in products" is sold as a service | `services` |
+| AI service line | "Smart assistants (AI)" is sold as a service | `services` |
+| Services list | Websites & web apps · Online stores & payments · Quick first versions · Smart assistants (AI) · Care after launch. "Online stores" replaced the old "APIs & backend" line, based on the Sri Cauvery and Élaré work | `services` |
 
 ## Confirm before merging — policies I wrote
 
@@ -23,11 +24,13 @@ but none existed before. Keep, edit or delete:
 
 - **FAQ:** "Code, accounts and IP transfer to you on final payment." · "Yes,
   we sign NDAs." · "Every project includes a support window."
-- **Durations:** web apps 6–12 weeks, APIs 3–8, MVPs 4–6, AI features 2–6;
-  process stages 1–3 days, 2–5 days, ~1 week.
+- **Durations:** websites 6–12 weeks, online stores 4–10, first versions 4–6,
+  AI assistants 2–6; process steps 1–3 days, 2–5 days, about a week.
 - **Engagement:** discovery call "No obligation"; support at a "Monthly rate".
 - **Budget ranges in the form:** Under ₹1 lakh · ₹1–3 lakh · ₹3–8 lakh · ₹8 lakh +.
-- **Studio principles** (`app/studio/page.tsx`): five short beliefs.
+- **About page** (`app/studio/page.tsx`): five beliefs and four "what working
+  with us is like" promises (plain English, fixed price, weekly updates, help
+  after launch).
 - **Privacy page** (`app/privacy/page.tsx`): a plain-language draft.
 
 ## Still missing (placeholders by design, nothing invented)
@@ -62,12 +65,17 @@ but none existed before. Keep, edit or delete:
 - **three.js without React Three Fiber / Drei; no Lenis, no Framer Motion** —
   see `docs/AUDIT.md` → Technology decisions. Keeps bundles small and every
   GPU resource on one explicit dispose path.
-- **Case-study worlds are 2D canvas**, not one WebGL scene each — far
-  cheaper on phones; only the hero uses WebGL.
+- **Projects show real screenshots, not animated worlds** — owner request;
+  each sits in a browser frame with its real address. Only the hero uses 3D.
 - **Gyroscope tilt not implemented** — it needs an iOS permission prompt;
   touch gets tap pulses instead.
-- **Lime "at most once per viewport"** — the nav CTA is outlined at the top of
-  the page and only turns lime once the hero CTA has scrolled away.
+- **Sticky navbar** — owner request: always visible (no hide-on-scroll). Past
+  the hero it turns solid and shows "We build things. We question things.";
+  its button turns lime only then, so the hero's lime button is never doubled.
+  Between 1024 and 1179px wide the tagline is hidden to leave room for links.
+- **Plain language** — owner request: copy rewritten for non-technical
+  visitors; coordinates, tech stacks and the tools map removed from the main
+  text (stacks remain as one small "Built with" line per case study).
 
 ## Not verified here
 

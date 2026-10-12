@@ -20,20 +20,20 @@ export default function ContactPage() {
           <Words text="Got a problem worth thinking about?" />
         </h1>
         <p className="contact-sub">
-          Seven fields, four of them optional. We reply within {studio.replyWithin} with next steps or a few clarifying questions.
+          A few quick questions — only three are required. We reply within {studio.replyWithin}.
         </p>
         <div className="contact-grid">
           <ContactForm source="contact-page" />
           <aside className="alt" aria-label="Other ways to reach us">
             <div className="alt-item">
-              <span className="mono">Book a call</span>
+              <span className="mono">Prefer to talk?</span>
               <a className="ulink" href={WHATSAPP_URL} target="_blank" rel="noopener" data-track="booking_click:contact-whatsapp">
-                Message on WhatsApp ↗
+                Message us on WhatsApp ↗
               </a>
-              <p>Say when suits you and in which time zone. We are on {studio.tzLabel}.</p>
+              <p>Tell us when suits you and we&apos;ll call. We&apos;re on {studio.tzLabel}.</p>
             </div>
             <div className="alt-item">
-              <span className="mono">Email directly</span>
+              <span className="mono">Email us</span>
               <CopyEmail email={CONTACT_EMAIL} />
             </div>
             <div className="alt-item">

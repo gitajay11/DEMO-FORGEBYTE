@@ -6,20 +6,20 @@ import { motionReduced } from '@/lib/prefs';
 // Scattered words organise into a structure as the section scrolls through.
 // Positions are percentages of the field: [scattered] → [structured].
 const NODES = [
-  { id: 'idea', from: [8, 66], to: [4, 34], note: 'Every project starts as one. We write it down in plain words before anything else.' },
-  { id: 'user', from: [58, 12], to: [29, 18], note: 'Who uses it, how often, on what device. That decides more than the stack does.' },
-  { id: 'constraint', from: [33, 58], to: [29, 56], note: 'Budget, deadline, team, legacy systems. We find them early, because they shape the design.' },
-  { id: 'data', from: [80, 70], to: [55, 37], note: 'What exists, who owns it, and what must never be wrong.' },
-  { id: 'deadline', from: [72, 24], to: [80, 37], note: 'We plan backwards from the date that matters, and say early if it cannot hold.' },
+  { id: 'idea', label: 'your idea', from: [8, 66], to: [3, 34], note: 'Every project starts with one. We write it down in plain words first.' },
+  { id: 'customers', label: 'your customers', from: [56, 12], to: [27, 16], note: 'Who will use it, how often, and on which device. That shapes everything else.' },
+  { id: 'budget', label: 'your budget', from: [30, 58], to: [27, 58], note: 'We agree what fits your budget before we start, so there are no surprises.' },
+  { id: 'today', label: 'what you have today', from: [76, 70], to: [52, 37], note: 'Your current site, spreadsheets or tools — we work with what you already have.' },
+  { id: 'deadline', label: 'your deadline', from: [70, 24], to: [80, 37], note: 'We plan back from the date that matters, and tell you early if it can’t be met.' },
 ] as const;
 const LINKS: [number, number][] = [[0, 1], [0, 2], [1, 3], [2, 3], [3, 4]];
-const STAGES = ['question', 'reason', 'design', 'build'];
+const STAGES = ['understand', 'plan', 'design', 'build'];
 
 export default function IdeaField() {
   const field = useRef<HTMLDivElement>(null);
   const nodes = useRef<(HTMLButtonElement | null)[]>([]);
   const lines = useRef<(SVGLineElement | null)[]>([]);
-  const [note, setNote] = useState('Hover or focus a word to see what we ask about it.');
+  const [note, setNote] = useState('Tap or hover a word to see what we ask about it.');
 
   useEffect(() => {
     const el = field.current;
@@ -88,7 +88,7 @@ export default function IdeaField() {
           onClick={() => setNote(n.note)}
           aria-describedby="idea-note"
         >
-          {n.id}
+          {n.label}
         </button>
       ))}
       <p className="idea-note" id="idea-note" aria-live="polite">{note}</p>

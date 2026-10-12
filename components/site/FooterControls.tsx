@@ -12,7 +12,6 @@ export function StudioClock() {
     const fmt = new Intl.DateTimeFormat('en-GB', {
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
       hour12: false,
       timeZone: studio.timeZone,
     });
@@ -23,7 +22,7 @@ export function StudioClock() {
   }, []);
   return (
     <span className="mono">
-      {studio.city} <span className="mono-plain" style={{ color: 'var(--text-1)', fontSize: 'inherit' }}>{now ?? '--:--:--'}</span> IST
+      Time in {studio.city} <span className="mono-plain" style={{ color: 'var(--text-1)', fontSize: 'inherit' }}>{now ?? '--:--'}</span>
     </span>
   );
 }
@@ -35,10 +34,10 @@ export function PrefToggles() {
     <>
       <ThemeCycle />
       <button className="toggle" onClick={() => setMotion(!reduced)} aria-pressed={reduced}>
-        Motion: <b>{reduced ? 'reduced' : 'full'}</b>
+        Animations: <b>{reduced ? 'off' : 'on'}</b>
       </button>
       <button className="toggle toggle-cursor" onClick={() => setCursor(!custom)} aria-pressed={!custom}>
-        Cursor: <b>{custom ? 'custom' : 'system'}</b>
+        Fancy cursor: <b>{custom ? 'on' : 'off'}</b>
       </button>
     </>
   );

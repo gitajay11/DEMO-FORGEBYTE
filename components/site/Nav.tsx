@@ -9,37 +9,43 @@ import { ThemeButton } from './ThemeToggle';
 const LINKS = [
   { href: '/work', label: 'Work' },
   { href: '/services', label: 'Services' },
-  { href: '/studio', label: 'Studio' },
-  { href: '/lab', label: 'Lab' },
+  { href: '/studio', label: 'About' },
+  { href: '/lab', label: 'Demos' },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // On pages with a hero, the bar turns solid and shows the tagline once the
+  // hero has scrolled away. Pages without a hero start in that state.
+  const [pastHero, setPastHero] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  // Hide on scroll down, return on scroll up
+  // Always visible (sticky). Track whether the hero is still on screen.
   useEffect(() => {
-    let last = window.scrollY;
     let ticking = false;
+    const update = () => {
+      ticking = false;
+      setScrolled(window.scrollY > 12);
+      const hero = document.querySelector<HTMLElement>('.hero');
+      const navH = document.querySelector<HTMLElement>('.nav')?.offsetHeight ?? 72;
+      setPastHero(!hero || hero.getBoundingClientRect().bottom <= navH + 1);
+    };
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        setScrolled(y > 12);
-        if (Math.abs(y - last) > 6) setHidden(y > last && y > 240);
-        last = y;
-        ticking = false;
-      });
+      requestAnimationFrame(update);
     };
-    onScroll();
+    update();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [pathname]);
 
   // Close the menu on navigation
   useEffect(() => setOpen(false), [pathname]);
@@ -73,12 +79,18 @@ export default function Nav() {
 
   return (
     <>
-      <header className="nav" data-hidden={hidden && !open} data-scrolled={scrolled || open}>
+      <header className="nav" data-scrolled={scrolled || open} data-past-hero={pastHero || open}>
         <div className="container nav-inner">
-          <Link href="/" className="logo" aria-label="Forgebyte — home">
-            <span className="logo-mark" aria-hidden="true">{'{}'}</span>
-            forgebyte
-          </Link>
+          <div className="nav-brand">
+            <Link href="/" className="logo" aria-label="Forgebyte — home">
+              <span className="logo-mark" aria-hidden="true">{'{}'}</span>
+              <span className="logo-word">forgebyte</span>
+            </Link>
+            {/* the hero headline, carried into the bar once the hero is gone */}
+            <p className="nav-tagline" aria-hidden="true">
+              <span className="t1">We build things.</span> <span className="t2">We question things.</span>
+            </p>
+          </div>
           <nav aria-label="Primary">
             <ul className="nav-links">
               {LINKS.map((l) => (
@@ -90,7 +102,7 @@ export default function Nav() {
               ))}
               <li><ThemeButton /></li>
               <li>
-                <Link href="/contact" className={`btn ${scrolled ? 'btn-primary' : 'btn-ghost'}`} data-magnetic data-track="cta_click:nav">
+                <Link href="/contact" className={`btn ${pastHero ? 'btn-primary' : 'btn-ghost'}`} data-magnetic data-track="cta_click:nav">
                   Start a project
                 </Link>
               </li>

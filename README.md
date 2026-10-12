@@ -1,8 +1,8 @@
 # Forgebyte
 
-Studio site for Forgebyte: an immersive, editorial site with a lazily loaded
-3D hero, per-project canvas "worlds", case-study pages and a contact pipeline
-over SMTP. Next.js App Router + TypeScript, three.js, GSAP.
+Studio site for Forgebyte: an editorial site in plain English, with a lazily
+loaded 3D hero, real screenshots of every project, case-study pages and a
+contact pipeline over SMTP. Next.js App Router + TypeScript, three.js, GSAP.
 
 Background for the redesign: `docs/AUDIT.md` (what was kept, rewritten and
 missing) and `docs/HANDOVER.md` (assumptions and placeholders to confirm).
@@ -33,11 +33,12 @@ app/
   opengraph-image.tsx   generated share image (twitter-image re-exports it)
   api/chat, api/contact route handlers (Groq; SMTP)
 components/
-  site/                 Nav, Footer, Cursor, theme toggles, SiteEffects
+  site/                 Nav (sticky; shows the hero tagline once past the hero),
+                        Footer, Cursor, theme toggles, SiteEffects
   home/                 HeroStage, IdeaField, Constellation, ScrollStories, Portrait, …
   work/ studio/ lab/ contact/ motion/
-  World.tsx             per-project 2D canvas worlds
-  lazy.tsx              code-split islands (canvases, GSAP, chat, cursor)
+  BrowserFrame.tsx      a project screenshot inside a simple browser window
+  lazy.tsx              code-split islands (decorative canvases, GSAP, chat, cursor)
 scenes/hero.ts          the three.js centrepiece
 lib/
   content.ts            ALL copy and project data
@@ -57,25 +58,26 @@ there; no layout or animation code needs to change.
 **Integrity rule:** never add a client, metric, testimonial or credential that
 isn't real. Unconfirmed values are listed in `docs/HANDOVER.md`.
 
-### Adding a case study
+### Adding a project
 
-1. Add a screenshot to `public/work/` (1000×625 works well).
-2. Add an entry to `caseStudies` in `lib/content.ts`. Pick a `world`
-   (`bubbles`, `grain`, `circuit`, `shade`, `steam`, `pulse`) and a
-   desaturated `tint`.
-3. That's it: the home track, `/work`, `/work/<slug>`, the sitemap and the
-   proof links all read from the same list.
+1. Screenshot the site's homepage at 1600×1000 and save it to `public/work/`
+   at 1000×625 (JPEG for photo-heavy sites, PNG otherwise).
+2. Add an entry to `caseStudies` in `lib/content.ts`, written in plain
+   English — say what it does for the customer, keep tool names to `stack`.
+3. That's it: the home page, `/work`, `/work/<slug>`, the sitemap and the
+   links in "How we think" all read from the same list.
 
-### Adding a world (scene)
+Demo sites go in `lab` instead, so they're never mistaken for client work.
 
-Write a function in `components/World.tsx` with the shape
-`(w, h, low) => ({ step(ctx) {…} })`, add it to `BUILD`, and add its name to
-`WorldKind` in `lib/content.ts`. Use `ctx.pal` / `ctx.light` for any
-colour that must work in both themes.
+### Writing copy
+
+Most visitors are business owners, not developers. Use everyday words
+("online store", "payments", "care after launch"), explain any technical term
+you can't avoid, and keep sentences short.
 
 ## Themes, motion and accessibility
 
-- **Themes:** dark by default, light when the OS prefers it, or by the nav /
+- **Themes:** dark by default, light when the device prefers it, or by the nav /
   footer toggle (stored in `localStorage`). Colours come only from
   `styles/tokens.css`; canvas and 3D code reads `palette(theme)` from
   `lib/tokens.ts` — keep the two in sync.

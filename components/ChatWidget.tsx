@@ -14,13 +14,13 @@ const TOPICS: Topic[] = [
     id: 'services',
     question: 'What do you build?',
     answer:
-      'Five things: web applications, APIs and backend systems, MVP sprints to test an idea, AI features inside products, and ongoing support after launch. Each service page also says when we are the wrong choice.',
+      'Five things: websites and web apps, online stores with payments, quick first versions to test an idea, smart AI chat assistants, and care after launch. Each one on the Services page also says when we are not the right fit.',
   },
   {
     id: 'stack',
-    question: 'What stack do you use?',
+    question: 'Do I need to understand technology?',
     answer:
-      'Usually TypeScript with Next.js or React, Node and PostgreSQL behind it, deployed on Vercel. Payments through Razorpay where needed. We pick what your team can maintain, not what is fashionable.',
+      'No. We explain everything in plain English and make the technical choices with you. We use proven, widely used tools so your site is easy to keep running.',
   },
   {
     id: 'timeline',
@@ -32,7 +32,7 @@ const TOPICS: Topic[] = [
     id: 'process',
     question: 'How does a project run?',
     answer:
-      'Five stages: Discover (a short call), Define (a written scope with a fixed quote), Design and build (weekly previews), Test and ship, then Support. Each stage ends with something you can hold.',
+      'Five steps: a short call, a written plan with a fixed price, building with a progress link every week, testing and launch, then help after launch.',
   },
   {
     id: 'pricing',
