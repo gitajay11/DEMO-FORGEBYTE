@@ -8,11 +8,11 @@ A full copy of the pre-redesign project is at `C:\Users\ajaya\Projects\backup fo
 | Item | What the site says now | Where to change |
 | --- | --- | --- |
 | Founder name | Ajay Kumar | `lib/content.ts` → `studio.founder` |
-| City / coordinates | Chennai · 13.08°N 80.27°E | `studio.city`, `studio.coords` |
+| City | Chennai, India | `studio.city` |
 | Founded | Est. 2026 | `studio.est` |
-| Availability | Accepting projects · Q4 2026 | `studio.availability` |
+| Availability | Taking on new projects · Q4 2026 | `studio.availability` |
 | Reply time | Within 1 working day | `studio.replyWithin` |
-| Project years / role | 2026 · Design & development, for all four | `caseStudies[].year`, `.role` |
+| Project years / role | 2026 · Design & build, for all four | `caseStudies[].year`, `.role` |
 | Élaré Beauty | Shown as a client project, "In progress" | `caseStudies` |
 | AI service line | "Smart assistants (AI)" is sold as a service | `services` |
 | Services list | Websites & web apps · Online stores & payments · Quick first versions · Smart assistants (AI) · Care after launch. "Online stores" replaced the old "APIs & backend" line, based on the Sri Cauvery and Élaré work | `services` |
@@ -26,7 +26,7 @@ but none existed before. Keep, edit or delete:
   we sign NDAs." · "Every project includes a support window."
 - **Durations:** websites 6–12 weeks, online stores 4–10, first versions 4–6,
   AI assistants 2–6; process steps 1–3 days, 2–5 days, about a week.
-- **Engagement:** discovery call "No obligation"; support at a "Monthly rate".
+- **Ways to work together:** first chat "No obligation"; monthly care at a "Monthly fee".
 - **Budget ranges in the form:** Under ₹1 lakh · ₹1–3 lakh · ₹3–8 lakh · ₹8 lakh +.
 - **About page** (`app/studio/page.tsx`): five beliefs and four "what working
   with us is like" promises (plain English, fixed price, weekly updates, help
@@ -37,9 +37,9 @@ but none existed before. Keep, edit or delete:
 
 1. Written consent from Loopa/Nutriyah, Sri Cauvery Electronics and Élaré to
    be shown as case studies (they were already public on the old site).
-2. Testimonials — the Proof section shows a worked example instead.
-3. Any measured outcome — every case study is labelled "Qualitative · no
-   metrics recorded".
+2. Testimonials — the "How we think" section shows a worked example instead.
+3. Any measured outcome — every case study says no numbers have been
+   measured yet.
 4. A booking link (Cal.com etc.) — WhatsApp stands in.
 5. A founder photo — the dithered "AK" is a typographic stand-in.
 
