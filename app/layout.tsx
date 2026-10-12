@@ -4,9 +4,8 @@ import { Analytics } from '@vercel/analytics/next';
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION } from '@/lib/site';
 import Nav from '@/components/site/Nav';
 import Footer from '@/components/site/Footer';
-import Cursor from '@/components/site/Cursor';
 import SiteEffects from '@/components/site/SiteEffects';
-import ChatWidget from '@/components/ChatWidget';
+import { LazyChat as ChatWidget, LazyCursor as Cursor } from '@/components/lazy';
 import IntroOverlay from '@/components/IntroOverlay';
 import './globals.css';
 

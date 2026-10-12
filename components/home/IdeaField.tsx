@@ -28,11 +28,16 @@ export default function IdeaField() {
     const place = (p: number) => {
       const e = p * p * (3 - 2 * p);
       const pts = NODES.map((n) => [n.from[0] + (n.to[0] - n.from[0]) * e, n.from[1] + (n.to[1] - n.from[1]) * e]);
-      pts.forEach(([x, y], i) => {
-        const node = nodes.current[i];
-        if (node) { node.style.left = `${x}%`; node.style.top = `${y}%`; }
-      });
       const w = el.clientWidth, h = el.clientHeight;
+      // keep every node fully inside the field on narrow screens
+      pts.forEach((pt, i) => {
+        const node = nodes.current[i];
+        if (!node) return;
+        const maxX = ((w - node.offsetWidth - 2) / w) * 100;
+        pt[0] = Math.min(pt[0], Math.max(0, maxX));
+        node.style.left = `${pt[0]}%`;
+        node.style.top = `${pt[1]}%`;
+      });
       LINKS.forEach(([a, b], i) => {
         const l = lines.current[i];
         const na = nodes.current[a], nb = nodes.current[b];

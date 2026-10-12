@@ -25,19 +25,33 @@ export default function SiteEffects() {
     document.querySelectorAll<SVGGeometryElement>('.draw path, .draw line, .draw polyline').forEach((el) => {
       try { el.style.setProperty('--len', String(Math.ceil(el.getTotalLength()))); } catch {}
     });
+    const reveal = (el: Element) => {
+      el.classList.add('in');
+      io.unobserve(el);
+    };
+    // threshold 0: a target hidden by its own clip-path reports zero visible
+    // area even when on screen, so any intersection counts.
     const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            io.unobserve(e.target);
-          }
-        }
-      },
-      { rootMargin: '0px 0px -12% 0px', threshold: 0.01 }
+      (entries) => entries.forEach((e) => e.isIntersecting && reveal(e.target)),
+      { rootMargin: '0px 0px -10% 0px', threshold: 0 }
     );
     targets.forEach((t) => (t.classList.contains('in') ? null : io.observe(t)));
-    return () => io.disconnect();
+    // Anything already scrolled past (anchor jumps, restored scroll, fast
+    // flicks) is revealed outright so nothing stays hidden above the reader.
+    const sweep = () => {
+      for (const t of targets) {
+        if (!t.classList.contains('in') && t.getBoundingClientRect().bottom < 0) reveal(t);
+      }
+    };
+    let raf = 0;
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; sweep(); }); };
+    sweep();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+    };
   }, [pathname]);
 
   // Analytics on [data-track="event:label"]

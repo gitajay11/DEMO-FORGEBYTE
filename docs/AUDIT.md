@@ -31,8 +31,9 @@ Written 12 Oct 2026, before any redesign code, against `main` at `ba03764`
 - **Structure:** single page — Intro (ABI) → Header → Hero → About → Services →
   Work → Process → Contact → Footer, plus chat widget. Routes: `/`,
   `/api/chat`, `/api/contact`, robots, sitemap, icons, OG image.
-- **Weight:** 8 scripts, **181.8 KB JS gzipped** up front (already over the
-  180 KB budget), 6.5 KB CSS, 67.5 KB HTML.
+- **Weight:** 8 scripts, 181.8 KB JS gzipped as first measured — but that
+  figure included a 38.7 KB `nomodule` polyfill modern browsers never load,
+  so the real up-front weight was ~143 KB. 6.5 KB CSS, 67.5 KB HTML.
 - **Headings:** one H1, ordered H2/H3. All images have alt text.
 - **Forms:** contact → `/api/contact` → two SMTP emails (studio + visitor
   confirmation, reference id). Chat leads → same inbox. Honeypot + per-IP
@@ -57,8 +58,10 @@ Written 12 Oct 2026, before any redesign code, against `main` at `ba03764`
 
 ## Rewrite
 
-- **Visual system:** green-on-black terminal look → the brief's
-  violet/lime editorial system (tokens in `styles/tokens.css` + `lib/tokens.ts`).
+- **Visual system:** green-on-black terminal look → the brief's editorial
+  system (tokens in `styles/tokens.css` + `lib/tokens.ts`). **Owner change:**
+  the brief's violet accent is replaced with blue, and a light theme was
+  added alongside dark (follows the OS, with a toggle).
 - **Typography:** Inter → Space Grotesk (display + body), keep JetBrains Mono.
 - **Information architecture:** one page → Home + `/work`, `/work/[slug]`,
   `/services`, `/studio`, `/contact`, `/lab`, `/privacy`, custom 404.
@@ -110,3 +113,22 @@ Written 12 Oct 2026, before any redesign code, against `main` at `ba03764`
 - **Case-study worlds** are 2D canvas scenes, not separate WebGL contexts:
   cheaper on phones, and the brief caps 3D to where it earns its cost.
 - **Analytics:** `@vercel/analytics` (cookieless) with custom events.
+
+## Results after the rebuild (redesign branch)
+
+| Check | Result |
+| --- | --- |
+| Up-front JS, modern browsers | 143–152 KB gzipped per page (budget 180) |
+| Lazy 3D bundle (three.js + scene) | 133 KB gzipped (budget 350) |
+| GSAP + ScrollTrigger | 18 KB, desktop + full motion only |
+| Pages × widths (375, 1440) | 24/24: no JS errors, no horizontal overflow |
+| Headings | one H1 per page, no skipped levels |
+| Images / controls | all images have alt; all buttons and links labelled |
+| Contrast | every text token ≥ 4.5:1 in both themes |
+| No JavaScript | full content, offer and CTA visible; intro skipped |
+| Reduced motion | no intro, no pins, poster instead of 3D, content identical |
+| Contact form | validated, end-to-end tested: both emails carry the new fields and a shared reference |
+| 404 | returns a real 404 status |
+
+Not measured here: Lighthouse scores, real-device Safari/iOS, screen readers
+(VoiceOver / NVDA). Do these on the preview deploy before merging.

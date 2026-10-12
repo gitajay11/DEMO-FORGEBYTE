@@ -22,6 +22,7 @@
   --accent-blue-soft:rgba(124,169,255,0.12);
   --accent-lime:#D5FF70;
   --accent-lime-hover:#E2FF9A;
+  --lime-ink:#D5FF70; /* lime used as text */
   --danger:#FF6B6B;
   --on-accent:#0A0C10;
   --on-blue:#0A0C10;
@@ -70,8 +71,8 @@
   /* layers */
   --z-scene:0;
   --z-content:1;
+  --z-menu:45;
   --z-nav:50;
-  --z-menu:60;
   --z-chat:70;
   --z-cursor:90;
   --z-transition:95;
@@ -95,6 +96,7 @@
   --accent-blue-soft:rgba(31,91,216,0.10);
   --accent-lime:#C8F25A;
   --accent-lime-hover:#B9E846;
+  --lime-ink:#4A6600;
   --on-accent:#0A0C10;
   --on-blue:#FFFFFF;
   --danger:#C42B2B;
@@ -117,6 +119,7 @@
     --accent-blue-soft:rgba(31,91,216,0.10);
     --accent-lime:#C8F25A;
     --accent-lime-hover:#B9E846;
+    --lime-ink:#4A6600;
     --on-accent:#0A0C10;
     --on-blue:#FFFFFF;
     --danger:#C42B2B;

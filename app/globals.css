@@ -56,6 +56,9 @@ body::before{
 }
 
 body.intro-lock{overflow:hidden; height:100vh;}
+/* Without JavaScript the intro can never finish, so it never shows */
+html:not(.js) body.intro-lock{overflow:visible; height:auto;}
+html:not(.js) #introOverlay{display:none;}
 
 /* =====================================================================
    Layout
@@ -162,7 +165,7 @@ main{display:block;}
 .theme-btn:hover{color:var(--accent-blue); border-color:var(--accent-blue);}
 .theme-btn svg{width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round;}
 .nav-mobile{display:none; align-items:center; gap:6px;}
-.menu-btn{display:grid; width:44px; height:44px; place-items:center; margin-right:-10px;}
+.menu-btn{display:flex; flex-direction:column; justify-content:center; align-items:center; width:44px; height:44px; margin-right:-10px;}
 .menu-btn span{display:block; width:22px; height:1.5px; background:var(--text-1); transition:transform var(--dur-short) var(--ease-out), opacity var(--dur-micro);}
 .menu-btn span + span{margin-top:6px;}
 .menu-btn[aria-expanded="true"] span:first-child{transform:translateY(3.75px) rotate(45deg);}
@@ -253,7 +256,9 @@ html:not(.js) .typein .c{clip-path:none !important; transform:none !important; f
   transform-origin:50% 0%; animation:curtain-up 560ms var(--ease-in-out) forwards;
 }
 @keyframes curtain-up{from{transform:scaleY(1);} to{transform:scaleY(0);}}
-.page-enter{animation:page-in 700ms var(--ease-out) both;}
+/* "backwards", not "both": an animation that keeps holding a transform makes
+   this wrapper the containing block for position:fixed, which breaks pinning */
+.page-enter{animation:page-in 700ms var(--ease-out) backwards;}
 @keyframes page-in{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;}}
 
 /* =====================================================================
@@ -392,7 +397,7 @@ html:not(.js) .hero .hero-meta{transform:none !important; opacity:1 !important;}
 .manifesto-body{grid-column:5 / span 7; display:flex; flex-direction:column; gap:var(--s-5);}
 .manifesto-body p{font-size:var(--fs-body-l); line-height:1.5; color:var(--text-2); max-width:var(--measure);}
 .manifesto-body p strong{color:var(--text-1); font-weight:500;}
-.idea-field{position:relative; grid-column:1 / -1; height:clamp(260px, 32vw, 420px); border-block:1px solid var(--border);}
+.idea-field{position:relative; overflow:hidden; grid-column:1 / -1; height:clamp(260px, 32vw, 420px); border-block:1px solid var(--border);}
 .idea-field .node{
   position:absolute; left:0; top:0; display:inline-flex; align-items:center; gap:8px;
   font-family:var(--font-mono-stack); font-size:0.8rem; color:var(--text-2); white-space:nowrap;
@@ -432,7 +437,7 @@ html:not(.js) .hero .hero-meta{transform:none !important; opacity:1 !important;}
 .fit{display:grid; grid-template-columns:1fr 1fr; gap:var(--gutter); margin-bottom:var(--s-5);}
 .fit p{font-size:0.95rem; color:var(--text-2);}
 .fit .mono{display:block; margin-bottom:6px;}
-.fit .yes .mono{color:var(--accent-lime);}
+.fit .yes .mono{color:var(--lime-ink);}
 @media (max-width:1023px){
   .constellation{display:none;}
   .service-list{grid-column:1 / -1;}
@@ -613,6 +618,7 @@ select.input{appearance:none; padding-right:40px; background-image:linear-gradie
 .field-error{color:var(--danger); font-size:0.875rem; min-height:1.2em;}
 fieldset.field{border:0;}
 .chips{display:flex; flex-wrap:wrap; gap:8px;}
+.field label.chip{font-family:var(--font-sans-stack); font-size:inherit; letter-spacing:0; text-transform:none; color:inherit;}
 .chip input{position:absolute; opacity:0; pointer-events:none;}
 .chip span{
   display:inline-flex; align-items:center; gap:8px; min-height:40px; padding:0 14px; border:1px solid var(--border-strong); border-radius:var(--r-pill);
@@ -625,7 +631,7 @@ fieldset.field{border:0;}
 .honeypot{position:absolute !important; left:-9999px !important; width:1px; height:1px; opacity:0;}
 .form-actions{grid-column:1 / -1; display:flex; flex-wrap:wrap; align-items:center; gap:18px 24px;}
 .form-status{font-size:0.95rem; color:var(--text-2);}
-.form-status[data-tone="ok"]{color:var(--accent-lime);}
+.form-status[data-tone="ok"]{color:var(--lime-ink);}
 .form-status[data-tone="error"]{color:var(--danger);}
 .form-done{grid-column:1 / span 7; padding:var(--s-7) 0; border-block:1px solid var(--border);}
 .form-done h3{margin-bottom:var(--s-4);}
@@ -659,6 +665,8 @@ fieldset.field{border:0;}
 .toggle{display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono-stack); font-size:var(--fs-mono); letter-spacing:0.08em; text-transform:uppercase; color:var(--text-3);}
 .toggle b{font-weight:500; color:var(--text-1);}
 .toggle:hover b{color:var(--accent-blue);}
+/* the custom cursor only exists for mice and trackpads */
+@media (hover:none), (pointer:coarse){ .toggle-cursor{display:none;} }
 @media (max-width:899px){
   .footer-cta,.footer-cols{grid-column:1 / -1;}
 }

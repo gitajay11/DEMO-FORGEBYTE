@@ -1,16 +1,18 @@
 # Forgebyte
 
-Marketing site for Forgebyte, a freelance web application development studio.
-Next.js App Router + TypeScript.
+Studio site for Forgebyte: an immersive, editorial site with a lazily loaded
+3D hero, per-project canvas "worlds", case-study pages and a contact pipeline
+over SMTP. Next.js App Router + TypeScript, three.js, GSAP.
+
+Background for the redesign: `docs/AUDIT.md` (what was kept, rewritten and
+missing) and `docs/HANDOVER.md` (assumptions and placeholders to confirm).
 
 ## Running locally
 
 ```bash
 npm install
-npm run dev
+npm run dev -- -p 3001     # 3000 is often taken locally
 ```
-
-Then open http://localhost:3000.
 
 ```bash
 npm run build   # production build
@@ -21,27 +23,86 @@ npm start       # serve the production build
 
 ```
 app/
-  layout.tsx     root layout, fonts (next/font), metadata
-  page.tsx       composes the one-page site
-  globals.css    all styling — ported verbatim from the original static page
+  layout.tsx            fonts, metadata, pre-paint prefs script, nav/footer/intro/chat
+  template.tsx          route curtain (re-mounts on every navigation)
+  page.tsx              home: hero → positioning → services → work → process →
+                        proof → founder → lab → engagement → FAQ → contact
+  work/, work/[slug]/   work index (URL-synced filters) and case studies
+  services/ studio/ contact/ lab/ privacy/   inner pages
+  not-found.tsx         404 with a particle scene
+  opengraph-image.tsx   generated share image (twitter-image re-exports it)
+  api/chat, api/contact route handlers (Groq; SMTP)
 components/
-  IntroOverlay   "Architecting Bold Ideas" intro animation   (client)
-  Header         sticky nav + mobile toggle                  (client)
-  Hero           hero copy + Terminal
-  Terminal       typing animation                            (client)
-  About          stack chips
-  Services       service cards
-  Work           case studies — PLACEHOLDER CONTENT
-  Process        four-stage process list
-  Contact        contact form + Select                       (client)
-  Select         themed dropdown (button + listbox)          (client)
-  Footer
-legacy/
-  index.html     the original single-file site, kept for reference
+  site/                 Nav, Footer, Cursor, theme toggles, SiteEffects
+  home/                 HeroStage, IdeaField, Constellation, ScrollStories, Portrait, …
+  work/ studio/ lab/ contact/ motion/
+  World.tsx             per-project 2D canvas worlds
+  lazy.tsx              code-split islands (canvases, GSAP, chat, cursor)
+scenes/hero.ts          the three.js centrepiece
+lib/
+  content.ts            ALL copy and project data
+  tokens.ts             colour/motion tokens for canvas + 3D (mirrors styles/tokens.css)
+  prefs.ts              theme / motion / cursor prefs and device tier
+  mail.ts, emailTemplates.ts, leads.ts, rateLimit.ts, track.ts, site.ts
+styles/tokens.css       design tokens, dark + light themes
+styles/chat.css         chat widget
 ```
 
-Styling is plain CSS with custom properties in `app/globals.css` — no Tailwind.
-Fonts are self-hosted at build time via `next/font/google`.
+## Editing content
+
+Everything a visitor reads lives in `lib/content.ts`: studio facts,
+services, case studies, lab items, process, engagement models and FAQ. Edit
+there; no layout or animation code needs to change.
+
+**Integrity rule:** never add a client, metric, testimonial or credential that
+isn't real. Unconfirmed values are listed in `docs/HANDOVER.md`.
+
+### Adding a case study
+
+1. Add a screenshot to `public/work/` (1000×625 works well).
+2. Add an entry to `caseStudies` in `lib/content.ts`. Pick a `world`
+   (`bubbles`, `grain`, `circuit`, `shade`, `steam`, `pulse`) and a
+   desaturated `tint`.
+3. That's it: the home track, `/work`, `/work/<slug>`, the sitemap and the
+   proof links all read from the same list.
+
+### Adding a world (scene)
+
+Write a function in `components/World.tsx` with the shape
+`(w, h, low) => ({ step(ctx) {…} })`, add it to `BUILD`, and add its name to
+`WorldKind` in `lib/content.ts`. Use `ctx.pal` / `ctx.light` for any
+colour that must work in both themes.
+
+## Themes, motion and accessibility
+
+- **Themes:** dark by default, light when the OS prefers it, or by the nav /
+  footer toggle (stored in `localStorage`). Colours come only from
+  `styles/tokens.css`; canvas and 3D code reads `palette(theme)` from
+  `lib/tokens.ts` — keep the two in sync.
+- **Motion:** OS reduced-motion or the footer toggle removes the intro, pins,
+  parallax and 3D (a static poster shows instead). Content is identical.
+- **Device tier** (`lib/prefs.ts`): `high` / `low` (touch, ≤4 GB, ≤4 cores)
+  / `static` (reduced motion, Save-Data, no WebGL).
+- **Without JavaScript** every page is readable and the intro never shows.
+- Reveal animations are CSS, triggered by one IntersectionObserver in
+  `SiteEffects`; mark elements with `data-reveal`, or use `<Words>` /
+  `<TypeIn>` from `components/motion/Text.tsx`.
+
+## Performance budget
+
+| | Budget | Now |
+| --- | --- | --- |
+| Up-front JS (modern browsers) | 180 KB gz | 143–152 KB |
+| Lazy 3D bundle | 350 KB gz | 133 KB |
+
+Measure from the server HTML, excluding `nomodule` scripts (legacy
+polyfills modern browsers never download).
+
+## Analytics
+
+`@vercel/analytics` (cookieless). Events: `cta_click`, `form_start`,
+`form_submit`, `booking_click`, `case_study_depth`. Tag any link with
+`data-track="cta_click:label"` to report it.
 
 ## Chat widget
 
@@ -107,10 +168,7 @@ Set these in Vercel (Settings → Environment Variables) and redeploy:
 Rate limit: 5 submissions per IP per 10 minutes, per serverless instance
 (the same caveat as the chat limiter — it trims abuse, it is not a quota).
 
-## Still outstanding
+## Deploying
 
-- The social links in `components/Contact.tsx` point at `github.com/forgebyte`,
-  `linkedin.com/in/forgebyte` and `x.com/forgebyte` — none of which are ours.
-- The hero badge in `components/Hero.tsx` advertises availability for Q4 2026.
-- Nav order doesn't match page order: the page runs Services before Work, but
-  the nav lists Work first, so the scroll-spy indicator appears to jump back.
+Vercel builds production from `main`. Preview deployments for other branches
+are currently **off** for this project — see `docs/HANDOVER.md`.

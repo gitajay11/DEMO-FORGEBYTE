@@ -2,7 +2,7 @@
 // CSS, triggered by SiteEffects adding `.in`. The full string stays in an
 // sr-only span so screen readers read words, not fragments.
 
-import type { ElementType, ReactNode } from 'react';
+import { Fragment, type ElementType, type ReactNode } from 'react';
 
 type Props = {
   text: string;
@@ -19,10 +19,12 @@ export function Words({ text, as: Tag = 'span', className = '', id }: Props) {
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {words.map((w, i) => (
-          <span className="w" key={i} style={{ ['--i' as string]: i }}>
-            <span>{w}</span>
+          <Fragment key={i}>
+            <span className="w" style={{ ['--i' as string]: i }}>
+              <span>{w}</span>
+            </span>
             {i < words.length - 1 ? ' ' : null}
-          </span>
+          </Fragment>
         ))}
       </span>
     </Tag>

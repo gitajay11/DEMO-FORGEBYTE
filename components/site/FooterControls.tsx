@@ -37,7 +37,7 @@ export function PrefToggles() {
       <button className="toggle" onClick={() => setMotion(!reduced)} aria-pressed={reduced}>
         Motion: <b>{reduced ? 'reduced' : 'full'}</b>
       </button>
-      <button className="toggle" onClick={() => setCursor(!custom)} aria-pressed={!custom}>
+      <button className="toggle toggle-cursor" onClick={() => setCursor(!custom)} aria-pressed={!custom}>
         Cursor: <b>{custom ? 'custom' : 'system'}</b>
       </button>
     </>

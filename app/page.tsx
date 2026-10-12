@@ -5,11 +5,8 @@ import { CONTACT_EMAIL, CONTACT_PHONE_E164, SITE_URL, WHATSAPP_URL } from '@/lib
 import { Index, Reveal, Words } from '@/components/motion/Text';
 import HeroStage from '@/components/home/HeroStage';
 import IdeaField from '@/components/home/IdeaField';
-import Constellation from '@/components/home/Constellation';
 import Glyph from '@/components/home/Glyph';
-import { ProcessPin, WorkTrack } from '@/components/home/ScrollStories';
-import Portrait from '@/components/home/Portrait';
-import WorldCanvas from '@/components/World';
+import { LazyConstellation as Constellation, LazyPortrait as Portrait, LazyProcessPin as ProcessPin, LazyWorkTrack as WorkTrack, LazyWorld as WorldCanvas } from '@/components/lazy';
 import ContactForm from '@/components/contact/ContactForm';
 import CopyEmail from '@/components/contact/CopyEmail';
 import HeroPoster from '@/components/home/HeroPoster';
@@ -153,7 +150,7 @@ export default function Home() {
                     <div className="yes"><span className="mono">A good fit if</span><p>{s.fitIf}</p></div>
                     <div><span className="mono">Not a fit if</span><p>{s.notFitIf}</p></div>
                   </div>
-                  <Link href={`/services#${s.slug}`} className="ulink">More on {s.name.toLowerCase()} →</Link>
+                  <Link href={`/services#${s.slug}`} className="ulink">More on this service →</Link>
                 </article>
               ))}
             </div>
