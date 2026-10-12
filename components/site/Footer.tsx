@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { studio } from '@/lib/content';
 import { CONTACT_EMAIL, WHATSAPP_URL } from '@/lib/site';
 import { PrefToggles, StudioClock } from './FooterControls';
+import SocialLinks from './SocialLinks';
 
 export default function Footer() {
   return (
@@ -13,6 +14,7 @@ export default function Footer() {
             <Link href="/contact" className="btn btn-primary" data-magnetic data-track="cta_click:footer">
               Start a project <span className="arrow" aria-hidden="true">→</span>
             </Link>
+            <SocialLinks />
           </div>
           <div className="footer-cols">
             <nav aria-label="Footer">
@@ -31,7 +33,6 @@ export default function Footer() {
                 <li><a href={`mailto:${CONTACT_EMAIL}`}>Email</a></li>
                 <li><a href={WHATSAPP_URL} target="_blank" rel="noopener" data-track="booking_click:footer-whatsapp">WhatsApp ↗</a></li>
                 <li><a href={studio.github} target="_blank" rel="noopener">GitHub ↗</a></li>
-                <li><a href={studio.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a></li>
               </ul>
             </div>
           </div>

@@ -42,6 +42,8 @@ but none existed before. Keep, edit or delete:
    measured yet.
 4. A booking link (Cal.com etc.) — WhatsApp stands in.
 5. A founder photo — the dithered "AK" is a typographic stand-in.
+6. Social links — Instagram, X, YouTube and Facebook icons point to `#`
+   until the accounts exist (`lib/content.ts` → `socials`). LinkedIn is real.
 
 ## Deployment notes
 
@@ -69,10 +71,11 @@ but none existed before. Keep, edit or delete:
   each sits in a browser frame with its real address. Only the hero uses 3D.
 - **Gyroscope tilt not implemented** — it needs an iOS permission prompt;
   touch gets tap pulses instead.
-- **Sticky navbar** — owner request: always visible (no hide-on-scroll). Past
-  the hero it turns solid and shows "We build things. We question things.";
-  its button turns lime only then, so the hero's lime button is never doubled.
-  Between 1024 and 1179px wide the tagline is hidden to leave room for links.
+- **Sticky navbar** — owner request: always visible (no hide-on-scroll).
+  Past 20px of scroll it becomes a centred floating glass pill (max 900px).
+  Past the hero, "We build things. We question things." replaces the
+  wordmark on two short lines, and the button turns lime only then, so the
+  hero's lime button is never doubled. A 3px blue progress line sits above it.
 - **Plain language** — owner request: copy rewritten for non-technical
   visitors; coordinates, tech stacks and the tools map removed from the main
   text (stacks remain as one small "Built with" line per case study).

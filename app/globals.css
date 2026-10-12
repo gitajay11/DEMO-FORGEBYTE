@@ -148,25 +148,37 @@ main{display:block;}
    ===================================================================== */
 .nav{
   position:fixed; inset:0 0 auto; z-index:var(--z-nav); height:var(--nav-h);
-  transition:transform var(--dur-base) var(--ease-out), background-color var(--dur-base) var(--ease-out), border-color var(--dur-base);
-  border-bottom:1px solid transparent;
+  pointer-events:none; /* only the bar itself takes clicks, not the gutters around the floating pill */
 }
-.nav[data-scrolled="true"]{background:color-mix(in srgb, var(--bg-0) 70%, transparent); backdrop-filter:blur(14px);}
-.nav[data-past-hero="true"]{background:color-mix(in srgb, var(--bg-0) 92%, transparent); backdrop-filter:blur(14px); border-bottom-color:var(--border);}
-.nav-brand{display:flex; align-items:center; gap:18px; min-width:0;}
+/* At the top: a plain transparent bar. Scrolled past 20px: a centred
+   floating glass pill. The nav is fixed, so the change never moves content. */
+.nav-inner{
+  height:100%; display:flex; align-items:center; justify-content:space-between; gap:24px;
+  max-width:min(var(--max), 100%); margin-top:0; pointer-events:auto;
+  border:1px solid transparent; border-radius:var(--r-pill);
+  transition:max-width 300ms var(--ease-out), margin-top 300ms var(--ease-out), height 300ms var(--ease-out),
+    padding 300ms var(--ease-out), background-color 300ms var(--ease-out), border-color 300ms var(--ease-out), box-shadow 300ms var(--ease-out);
+}
+.nav[data-floating="true"] .nav-inner{
+  max-width:min(900px, calc(100% - 24px)); margin-top:12px; height:calc(var(--nav-h) - 16px); padding-inline:14px 8px;
+  background-color:color-mix(in srgb, var(--bg-0) 60%, transparent);
+  -webkit-backdrop-filter:blur(12px) saturate(150%); backdrop-filter:blur(12px) saturate(150%);
+  border-color:var(--border-strong);
+  box-shadow:0 12px 32px -14px rgba(0,0,0,0.35), 0 2px 6px -2px rgba(0,0,0,0.12);
+}
+/* the tagline sits on two short lines in the wordmark's place, so it fits the pill */
+.nav-brand{position:relative; display:flex; align-items:center; min-width:0;}
 .logo-word{transition:opacity var(--dur-short) var(--ease-out);}
 .nav-tagline{
-  display:flex; gap:6px; white-space:nowrap; font-size:0.95rem; font-weight:500; letter-spacing:-0.01em; line-height:1.15;
-  padding-left:18px; border-left:1px solid var(--border-strong);
+  position:absolute; left:40px; display:flex; flex-direction:column; white-space:nowrap;
+  font-size:0.82rem; font-weight:500; letter-spacing:-0.01em; line-height:1.15;
   opacity:0; transform:translateY(6px); pointer-events:none;
   transition:opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
 }
 .nav-tagline .t1{color:var(--text-1);}
 .nav-tagline .t2{color:var(--accent-blue);}
 .nav[data-past-hero="true"] .nav-tagline{opacity:1; transform:none;}
-/* desktop also needs room for the links: the tagline shows from 1180px */
-@media (min-width:1024px) and (max-width:1179px){ .nav-tagline{display:none;} }
-.nav-inner{height:100%; display:flex; align-items:center; justify-content:space-between; gap:24px;}
+.nav[data-past-hero="true"] .logo-word{opacity:0;}
 .logo{display:inline-flex; align-items:center; gap:10px; font-weight:600; font-size:1.125rem; letter-spacing:-0.02em;}
 .logo-mark{width:30px; height:30px; display:grid; place-items:center; border:1px solid var(--border-strong); border-radius:2px; font-family:var(--font-mono-stack); font-size:12px; color:var(--accent-blue);}
 .nav-links{display:flex; align-items:center; gap:clamp(18px, 2.4vw, 34px);}
@@ -206,13 +218,27 @@ main{display:block;}
 .menu[data-open="true"] .menu-list li:nth-child(5) a{transition-delay:520ms;}
 .menu-foot{display:flex; flex-direction:column; gap:16px;}
 
+/* Scroll progress: a hairline at the very top, scaled (not resized) so it
+   never triggers layout. */
+.scroll-progress{
+  position:fixed; top:0; left:0; right:0; height:3px; z-index:var(--z-progress); pointer-events:none;
+  background:var(--accent-blue); transform:scaleX(0); transform-origin:0 50%; will-change:transform;
+}
+
+/* Social icons (footer + phone menu) */
+.socials{display:flex; flex-wrap:wrap; gap:10px;}
+.social-link{
+  width:40px; height:40px; display:grid; place-items:center; border:1px solid var(--border); border-radius:var(--r-pill);
+  color:var(--text-2); transition:color var(--dur-short), border-color var(--dur-short), background-color var(--dur-short), transform var(--dur-short) var(--ease-out);
+}
+.social-link:hover{color:var(--accent-blue); border-color:var(--accent-blue); background:color-mix(in srgb, var(--accent-blue) 8%, transparent); transform:translateY(-2px);}
+.social-link svg{width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round;}
+
 @media (max-width:1023px){
   .nav-links{display:none;}
   .nav-mobile{display:flex;}
-  /* phones: the tagline takes the wordmark's place, on two short lines */
-  .nav-brand{position:relative; gap:10px;}
-  .nav-tagline{position:absolute; left:40px; flex-direction:column; gap:0; padding-left:0; border-left:0; font-size:0.82rem;}
-  .nav[data-past-hero="true"] .logo-word{opacity:0;}
+  .nav[data-floating="true"] .nav-inner{padding-inline:12px 2px;}
+  .nav[data-floating="true"] .menu-btn{margin-right:0;}
 }
 @media (min-width:1024px){ .menu{display:none;} }
 
@@ -684,6 +710,7 @@ fieldset.field{border:0;}
 .footer-top{display:grid; grid-template-columns:repeat(12, minmax(0,1fr)); column-gap:var(--gutter); row-gap:var(--s-6);}
 .footer-cta{grid-column:1 / span 6;}
 .footer-cta .h3{margin-bottom:var(--s-6); max-width:22ch;}
+.footer-cta .socials{margin-top:var(--s-6);}
 .footer-cols{grid-column:8 / span 5; display:grid; grid-template-columns:1fr 1fr; gap:var(--s-6);}
 .footer-cols ul{display:flex; flex-direction:column; gap:8px; margin-top:12px;}
 .footer-cols a{color:var(--text-2);}

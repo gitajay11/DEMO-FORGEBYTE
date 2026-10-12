@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { studio } from '@/lib/content';
 import { ThemeButton } from './ThemeToggle';
+import SocialLinks from './SocialLinks';
 
 const LINKS = [
   { href: '/work', label: 'Work' },
@@ -16,6 +17,7 @@ const LINKS = [
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  // past 20px the bar becomes a floating glass pill
   const [scrolled, setScrolled] = useState(false);
   // On pages with a hero, the bar turns solid and shows the tagline once the
   // hero has scrolled away. Pages without a hero start in that state.
@@ -28,7 +30,7 @@ export default function Nav() {
     let ticking = false;
     const update = () => {
       ticking = false;
-      setScrolled(window.scrollY > 12);
+      setScrolled(window.scrollY > 20);
       const hero = document.querySelector<HTMLElement>('.hero');
       const navH = document.querySelector<HTMLElement>('.nav')?.offsetHeight ?? 72;
       setPastHero(!hero || hero.getBoundingClientRect().bottom <= navH + 1);
@@ -79,7 +81,7 @@ export default function Nav() {
 
   return (
     <>
-      <header className="nav" data-scrolled={scrolled || open} data-past-hero={pastHero || open}>
+      <header className="nav" data-floating={scrolled && !open} data-past-hero={pastHero || open}>
         <div className="container nav-inner">
           <div className="nav-brand">
             <Link href="/" className="logo" aria-label="Forgebyte — home">
@@ -147,6 +149,7 @@ export default function Nav() {
         <div className="menu-foot">
           <p className="mono live">Accepting projects · {studio.availability}</p>
           <p className="mono">{studio.city} · {studio.tzLabel}</p>
+          <SocialLinks />
         </div>
       </div>
     </>

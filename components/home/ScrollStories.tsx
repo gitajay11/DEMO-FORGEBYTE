@@ -32,13 +32,17 @@ function useDesktopStory(setup: (lib: Awaited<ReturnType<typeof loadGsap>>, root
       // fonts change line heights, which moves every trigger
       document.fonts?.ready.then(() => !cancelled && lib.ScrollTrigger.refresh());
     };
+    // the intro's scroll lock changes the page height when it lifts
+    const remeasure = () => void loadGsap().then(({ ScrollTrigger }) => !cancelled && ScrollTrigger.refresh());
     void apply();
     mq.addEventListener('change', apply);
     window.addEventListener('fb-prefs', apply);
+    window.addEventListener('intro:done', remeasure);
     return () => {
       cancelled = true;
       mq.removeEventListener('change', apply);
       window.removeEventListener('fb-prefs', apply);
+      window.removeEventListener('intro:done', remeasure);
       teardown?.();
     };
     // setup is stable per component
@@ -66,6 +70,9 @@ export function WorkTrack() {
           scrub: 0.6,
           invalidateOnRefresh: true,
           anticipatePin: 1,
+          // refreshed before the process pin below it, whatever order the two
+          // lazy islands mount in — see ProcessPin
+          refreshPriority: 1,
         },
       });
     }, root);
@@ -80,7 +87,7 @@ export function WorkTrack() {
 
 /** One pinned section: the process line draws through each stage. */
 export function ProcessPin() {
-  const anchor = useDesktopStory(({ gsap }, root) => {
+  const anchor = useDesktopStory(({ gsap, ScrollTrigger }, root) => {
     const steps = root.querySelector<HTMLElement>('.process-steps');
     const items = [...root.querySelectorAll<HTMLElement>('.step')];
     if (!steps || !items.length) return () => {};
@@ -94,6 +101,11 @@ export function ProcessPin() {
           pin: true,
           scrub: 0.4,
           invalidateOnRefresh: true,
+          // Must be measured after the Work pin above has added its spacer.
+          // Without this, when this island mounted first its start was
+          // computed ~1,600px too early: it pinned mid-Work and left a dead
+          // gap after the section.
+          refreshPriority: 0,
           onUpdate: (self) => {
             const p = self.progress;
             steps.style.setProperty('--p', `${(p * 100).toFixed(1)}%`);
@@ -103,6 +115,7 @@ export function ProcessPin() {
         },
       });
     }, root);
+    ScrollTrigger.refresh();
     return () => {
       ctx.revert();
       delete steps.dataset.pinned;

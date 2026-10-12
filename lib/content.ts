@@ -24,6 +24,16 @@ export const studio = {
   linkedin: 'https://www.linkedin.com/in/ajayak1501',
 } as const;
 
+/** Social profiles shown as icons in the footer and phone menu.
+ *  '#' = placeholder until the account exists (see docs/HANDOVER.md). */
+export const socials = [
+  { name: 'Instagram', url: '#' },
+  { name: 'LinkedIn', url: studio.linkedin },
+  { name: 'X', url: '#' },
+  { name: 'YouTube', url: '#' },
+  { name: 'Facebook', url: '#' },
+] as const;
+
 /* ------------------------------------------------------------------ */
 /* Services                                                             */
 /* ------------------------------------------------------------------ */

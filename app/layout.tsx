@@ -7,6 +7,7 @@ import Footer from '@/components/site/Footer';
 import SiteEffects from '@/components/site/SiteEffects';
 import { LazyChat as ChatWidget, LazyCursor as Cursor } from '@/components/lazy';
 import IntroOverlay from '@/components/IntroOverlay';
+import ScrollProgress from '@/components/site/ScrollProgress';
 import './globals.css';
 
 // Self-hosted and subset by next/font; only the weights actually used.
@@ -78,9 +79,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
       </head>
-      {/* intro-lock is removed by IntroOverlay once the ABI intro finishes */}
-      <body className="intro-lock">
+      {/* intro-lock is removed by IntroOverlay once the ABI intro finishes.
+          suppressHydrationWarning: browser extensions write inline styles on
+          <body> (e.g. margin-top:0px) before React hydrates. */}
+      <body className="intro-lock" suppressHydrationWarning>
         <IntroOverlay />
+        <ScrollProgress />
         <a href="#main" className="skip-link">Skip to content</a>
         <Nav />
         <main id="main" tabIndex={-1}>{children}</main>

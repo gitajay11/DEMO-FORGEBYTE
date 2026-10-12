@@ -26,6 +26,9 @@ export default function Portrait({ initials }: { initials: string }) {
     const build = () => {
       const r = canvas.getBoundingClientRect();
       w = r.width; h = r.height;
+      // detached (route change before fonts load) or not laid out yet:
+      // getImageData throws on a 0-size canvas
+      if (w < step || h < step) { cells = []; return; }
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       c.setTransform(dpr, 0, 0, dpr, 0, 0);
       const off = document.createElement('canvas');
@@ -63,7 +66,9 @@ export default function Portrait({ initials }: { initials: string }) {
     };
     const loop = (t: number) => { draw(t); raf = requestAnimationFrame(loop); };
 
+    let alive = true;
     document.fonts?.ready.then(() => {
+      if (!alive) return;
       build();
       if (motionReduced()) draw(0);
       else raf = requestAnimationFrame(loop);
@@ -80,6 +85,7 @@ export default function Portrait({ initials }: { initials: string }) {
     const ro = new ResizeObserver(() => { build(); draw(0); });
     ro.observe(canvas);
     return () => {
+      alive = false;
       cancelAnimationFrame(raf);
       offTheme();
       io.disconnect(); ro.disconnect();
