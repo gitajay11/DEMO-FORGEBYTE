@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 
 export const MOTION_KEY = 'fb-motion'; // 'reduced' | 'full' | absent = follow OS
 export const CURSOR_KEY = 'fb-cursor'; // 'system' | absent = custom
+export const THEME_KEY = 'fb-theme'; // 'light' | 'dark' | absent = follow OS
 const EVENT = 'fb-prefs';
 
 function osReducedMotion(): boolean {
@@ -39,23 +40,59 @@ export function setCursor(custom: boolean) {
   window.dispatchEvent(new Event(EVENT));
 }
 
+export type Theme = 'light' | 'dark';
+
+/** The theme actually showing: explicit choice, else the OS preference. */
+export function resolvedTheme(): Theme {
+  const attr = document.documentElement.dataset.theme;
+  if (attr === 'light' || attr === 'dark') return attr;
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
+export function setTheme(theme: Theme | 'system') {
+  const root = document.documentElement;
+  if (theme === 'system') {
+    delete root.dataset.theme;
+    try { localStorage.removeItem(THEME_KEY); } catch {}
+  } else {
+    root.dataset.theme = theme;
+    try { localStorage.setItem(THEME_KEY, theme); } catch {}
+  }
+  window.dispatchEvent(new Event(EVENT));
+}
+
+/** Subscribe to theme changes from the toggle or the OS. Returns cleanup. */
+export function onThemeChange(cb: () => void): () => void {
+  const mq = window.matchMedia('(prefers-color-scheme: light)');
+  window.addEventListener(EVENT, cb);
+  mq.addEventListener('change', cb);
+  return () => {
+    window.removeEventListener(EVENT, cb);
+    mq.removeEventListener('change', cb);
+  };
+}
+
 function usePref<T>(read: () => T, fallback: T): T {
   const [value, setValue] = useState<T>(fallback);
   useEffect(() => {
     const update = () => setValue(read());
     update();
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const cs = window.matchMedia('(prefers-color-scheme: light)');
     window.addEventListener(EVENT, update);
     mq.addEventListener('change', update);
+    cs.addEventListener('change', update);
     return () => {
       window.removeEventListener(EVENT, update);
       mq.removeEventListener('change', update);
+      cs.removeEventListener('change', update);
     };
   }, [read]);
   return value;
 }
 
 export const useReducedMotion = () => usePref(motionReduced, false);
+export const useTheme = () => usePref(resolvedTheme, 'dark' as Theme);
 export const useCustomCursor = () => usePref(cursorCustom, true);
 
 export type DeviceTier = 'high' | 'low' | 'static';

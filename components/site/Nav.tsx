@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { studio } from '@/lib/content';
+import { ThemeButton } from './ThemeToggle';
 
 const LINKS = [
   { href: '/work', label: 'Work' },
@@ -87,6 +88,7 @@ export default function Nav() {
                   </Link>
                 </li>
               ))}
+              <li><ThemeButton /></li>
               <li>
                 <Link href="/contact" className={`btn ${scrolled ? 'btn-primary' : 'btn-ghost'}`} data-magnetic data-track="cta_click:nav">
                   Start a project
@@ -94,6 +96,8 @@ export default function Nav() {
               </li>
             </ul>
           </nav>
+          <div className="nav-mobile">
+          <ThemeButton />
           <button
             ref={buttonRef}
             className="menu-btn"
@@ -105,6 +109,7 @@ export default function Nav() {
             <span />
             <span />
           </button>
+          </div>
         </div>
       </header>
 

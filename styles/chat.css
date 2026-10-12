@@ -10,10 +10,10 @@
   --text: var(--text-1);
   --text-muted: var(--text-2);
   --text-dim: var(--text-3);
-  --accent: var(--accent-violet);
-  --accent-soft: rgba(167,139,250,0.14);
-  --accent-2: var(--accent-violet);
-  --accent-on: var(--bg-0);
+  --accent: var(--accent-blue);
+  --accent-soft: var(--accent-blue-soft);
+  --accent-2: var(--accent-blue);
+  --accent-on: var(--on-blue);
   --mono: var(--font-mono-stack);
   --sans: var(--font-sans-stack);
 }

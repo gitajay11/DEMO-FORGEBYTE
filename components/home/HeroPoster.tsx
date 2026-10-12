@@ -15,20 +15,20 @@ export default function HeroPoster() {
       <svg viewBox="-320 -320 640 640">
         <defs>
           <radialGradient id="core" cx="40%" cy="38%" r="65%">
-            <stop offset="0%" stopColor="#2A2340" />
-            <stop offset="70%" stopColor="#121218" />
-            <stop offset="100%" stopColor="#A78BFA" stopOpacity="0.8" />
+            <stop offset="0%" style={{ stopColor: 'var(--bg-2)' }} />
+            <stop offset="70%" style={{ stopColor: 'var(--bg-1)' }} />
+            <stop offset="100%" style={{ stopColor: 'var(--accent-blue)', stopOpacity: 0.8 }} />
           </radialGradient>
         </defs>
         <g fill="none" strokeWidth="1">
-          <ellipse rx="190" ry="62" stroke="#A78BFA" strokeOpacity="0.55" transform="rotate(-18)" />
-          <ellipse rx="232" ry="96" stroke="#6D5BA8" strokeOpacity="0.5" transform="rotate(24)" />
-          <ellipse rx="272" ry="44" stroke="#B9B5C4" strokeOpacity="0.18" transform="rotate(-6)" />
+          <ellipse rx="190" ry="62" style={{ stroke: 'var(--accent-blue)' }} strokeOpacity="0.55" transform="rotate(-18)" />
+          <ellipse rx="232" ry="96" style={{ stroke: 'var(--accent-blue-dim)' }} strokeOpacity="0.5" transform="rotate(24)" />
+          <ellipse rx="272" ry="44" style={{ stroke: 'var(--text-2)' }} strokeOpacity="0.22" transform="rotate(-6)" />
         </g>
         <circle r="118" fill="url(#core)" />
-        <circle r="118" fill="none" stroke="#A78BFA" strokeOpacity="0.6" />
+        <circle r="118" style={{ fill: 'none', stroke: 'var(--accent-blue)' }} strokeOpacity="0.6" />
         {POINTS.map((p, i) => (
-          <circle key={i} cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r={p.s.toFixed(2)} fill={p.lime ? '#D5FF70' : '#A78BFA'} fillOpacity={p.lime ? 0.9 : 0.55} />
+          <circle key={i} cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r={p.s.toFixed(2)} style={{ fill: p.lime ? 'var(--accent-lime)' : 'var(--accent-blue)' }} fillOpacity={p.lime ? 0.9 : 0.55} />
         ))}
       </svg>
     </div>

@@ -322,7 +322,7 @@ export const lab: LabItem[] = [
     image: '',
     imageAlt: '',
     world: 'pulse',
-    tint: '#A78BFA',
+    tint: '#7CA9FF',
   },
 ];
 

@@ -1,28 +1,35 @@
 /* Design tokens. Mirrored in lib/tokens.ts so the canvas scenes read the
-   same values — change both together. */
+   same values — change both together.
+
+   Two themes. Dark is the default; light applies when the visitor picks it
+   (html[data-theme="light"]) or, with no explicit choice, when their OS
+   prefers light. Only colour tokens differ between themes. */
 :root{
-  /* surfaces */
-  --bg-0:#0B0B0E;
-  --bg-1:#121218;
-  --bg-2:#1A1A22;
-  --graphite:#2A2A33;
+  /* surfaces — near-black with a cool cast */
+  --bg-0:#0A0C10;
+  --bg-1:#11141B;
+  --bg-2:#181C25;
+  --graphite:#262B36;
 
   /* text */
-  --text-1:#F2F0F6;
-  --text-2:#B9B5C4;
-  --text-3:#8A8698; /* brief's #7C7889 lifted to clear 4.5:1 on --bg-0 */
+  --text-1:#F0F3F8;
+  --text-2:#B4BCCB;
+  --text-3:#8792A6;
 
-  /* accents */
-  --accent-violet:#A78BFA;
-  --accent-violet-dim:#6D5BA8;
+  /* accents — blue for thought and interaction, lime for action and "live" */
+  --accent-blue:#7CA9FF;
+  --accent-blue-dim:#3B5C9E;
+  --accent-blue-soft:rgba(124,169,255,0.12);
   --accent-lime:#D5FF70;
+  --accent-lime-hover:#E2FF9A;
   --danger:#FF6B6B;
-  --on-accent:#0B0B0E;
+  --on-accent:#0A0C10;
+  --on-blue:#0A0C10;
 
   /* lines */
-  --border:rgba(242,240,246,0.08);
-  --border-strong:rgba(242,240,246,0.16);
-  --border-hair:rgba(242,240,246,0.05);
+  --border:rgba(240,243,248,0.08);
+  --border-strong:rgba(240,243,248,0.16);
+  --border-hair:rgba(240,243,248,0.05);
 
   /* type */
   --font-sans-stack:var(--font-sans), 'Space Grotesk', system-ui, sans-serif;
@@ -69,6 +76,55 @@
   --z-cursor:90;
   --z-transition:95;
   --z-intro:100;
+
+  color-scheme:dark;
+}
+
+/* Light theme — one block, applied two ways (explicit choice, or OS
+   preference with no explicit choice). Keep the two copies identical. */
+:root[data-theme="light"]{
+  --bg-0:#F5F7FA;
+  --bg-1:#FFFFFF;
+  --bg-2:#EBEFF5;
+  --graphite:#D3DAE5;
+  --text-1:#0B1220;
+  --text-2:#3A4556;
+  --text-3:#56627A;
+  --accent-blue:#1F5BD8;
+  --accent-blue-dim:#8DAEEB;
+  --accent-blue-soft:rgba(31,91,216,0.10);
+  --accent-lime:#C8F25A;
+  --accent-lime-hover:#B9E846;
+  --on-accent:#0A0C10;
+  --on-blue:#FFFFFF;
+  --danger:#C42B2B;
+  --border:rgba(11,18,32,0.10);
+  --border-strong:rgba(11,18,32,0.20);
+  --border-hair:rgba(11,18,32,0.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg-0:#F5F7FA;
+    --bg-1:#FFFFFF;
+    --bg-2:#EBEFF5;
+    --graphite:#D3DAE5;
+    --text-1:#0B1220;
+    --text-2:#3A4556;
+    --text-3:#56627A;
+    --accent-blue:#1F5BD8;
+    --accent-blue-dim:#8DAEEB;
+    --accent-blue-soft:rgba(31,91,216,0.10);
+    --accent-lime:#C8F25A;
+    --accent-lime-hover:#B9E846;
+    --on-accent:#0A0C10;
+    --on-blue:#FFFFFF;
+    --danger:#C42B2B;
+    --border:rgba(11,18,32,0.10);
+    --border-strong:rgba(11,18,32,0.20);
+    --border-hair:rgba(11,18,32,0.05);
+    color-scheme:light;
+  }
 }
 
 @media (max-width:767px){

@@ -62,13 +62,16 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0B0B0E',
-  colorScheme: 'dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#F5F7FA' },
+    { media: '(prefers-color-scheme: dark)', color: '#0A0C10' },
+  ],
+  colorScheme: 'dark light',
 };
 
 // Runs before first paint: marks JS as available (CSS only hides reveal
 // targets when it is) and applies the stored motion / cursor toggles.
-const PREFS_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');try{var m=localStorage.getItem('fb-motion');if(m)d.dataset.motion=m;var c=localStorage.getItem('fb-cursor');d.dataset.cursor=c||'custom';}catch(e){d.dataset.cursor='custom';}})();`;
+const PREFS_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');try{var m=localStorage.getItem('fb-motion');if(m)d.dataset.motion=m;var c=localStorage.getItem('fb-cursor');d.dataset.cursor=c||'custom';var t=localStorage.getItem('fb-theme');if(t)d.dataset.theme=t;}catch(e){d.dataset.cursor='custom';}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

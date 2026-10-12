@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motionReduced } from '@/lib/prefs';
-import { tokens } from '@/lib/tokens';
+import { motionReduced, onThemeChange, resolvedTheme } from '@/lib/prefs';
+import { palette } from '@/lib/tokens';
 
 // No photo was supplied, so the founder "portrait" is typographic: the
-// initials rendered as an ordered-dither dot field in violet. The pointer
+// initials rendered as an ordered-dither dot field in the accent blue. The pointer
 // ripples the dots; reduced motion gets one still frame.
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16);
 
@@ -19,6 +19,8 @@ export default function Portrait({ initials }: { initials: string }) {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     let w = 0, h = 0, raf = 0, cells: { x: number; y: number; v: number }[] = [];
     const pointer = { x: -999, y: -999 };
+    let pal = palette(resolvedTheme());
+    const offTheme = onThemeChange(() => { pal = palette(resolvedTheme()); draw(performance.now()); });
     const step = 7;
 
     const build = () => {
@@ -51,7 +53,7 @@ export default function Portrait({ initials }: { initials: string }) {
         const d = Math.hypot(p.x - pointer.x, p.y - pointer.y);
         const ripple = d < 140 ? Math.sin(d * 0.08 - t * 0.006) * (1 - d / 140) : 0;
         const r = 1.1 + p.v * 1.5 + ripple * 1.2;
-        c.fillStyle = p.v > 0.85 ? tokens.color.violet : tokens.color.violetDim;
+        c.fillStyle = p.v > 0.85 ? pal.blue : pal.blueDim;
         c.globalAlpha = 0.45 + p.v * 0.55;
         c.beginPath();
         c.arc(p.x, p.y, Math.max(0.4, r), 0, Math.PI * 2);
@@ -79,6 +81,7 @@ export default function Portrait({ initials }: { initials: string }) {
     ro.observe(canvas);
     return () => {
       cancelAnimationFrame(raf);
+      offTheme();
       io.disconnect(); ro.disconnect();
       canvas.removeEventListener('pointermove', move);
       canvas.removeEventListener('pointerleave', leave);

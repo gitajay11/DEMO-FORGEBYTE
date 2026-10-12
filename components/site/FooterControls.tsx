@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { setCursor, setMotion, useCustomCursor, useReducedMotion } from '@/lib/prefs';
 import { studio } from '@/lib/content';
+import { ThemeCycle } from './ThemeToggle';
 
 /** Live local clock for the studio's city. */
 export function StudioClock() {
@@ -32,6 +33,7 @@ export function PrefToggles() {
   const custom = useCustomCursor();
   return (
     <>
+      <ThemeCycle />
       <button className="toggle" onClick={() => setMotion(!reduced)} aria-pressed={reduced}>
         Motion: <b>{reduced ? 'reduced' : 'full'}</b>
       </button>

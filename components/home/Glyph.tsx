@@ -17,7 +17,7 @@ export function glyphPath(g: Service['glyph']) {
 export default function Glyph({ kind, className }: { kind: Service['glyph']; className?: string }) {
   return (
     <svg className={className} viewBox="-15 -15 30 30" aria-hidden="true">
-      <path d={PATHS[kind]} fill="none" stroke="var(--accent-violet)" strokeWidth="1" strokeLinejoin="round" />
+      <path d={PATHS[kind]} style={{ fill: 'none', stroke: 'var(--accent-blue)' }} strokeWidth="1" strokeLinejoin="round" />
     </svg>
   );
 }

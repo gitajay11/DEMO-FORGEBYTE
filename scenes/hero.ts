@@ -10,6 +10,7 @@ import {
   Color,
   Group,
   IcosahedronGeometry,
+  NormalBlending,
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
@@ -21,7 +22,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from 'three';
-import { tokens } from '@/lib/tokens';
+import { palette } from '@/lib/tokens';
 
 export type HeroQuality = 'high' | 'low';
 
@@ -66,7 +67,11 @@ const smooth = (a: number, b: number, t: number) => {
 };
 const easeOut = (x: number) => 1 - Math.pow(1 - x, 4);
 
-export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroScene {
+export function createHeroScene(host: HTMLElement, quality: HeroQuality, theme: 'light' | 'dark' = 'dark'): HeroScene {
+  const isLight = theme === 'light';
+  const pal = palette(theme);
+  // Additive glow vanishes on a light ground, so light mode blends normally.
+  const glowBlend = isLight ? NormalBlending : AdditiveBlending;
   const high = quality === 'high';
   const renderer = new WebGLRenderer({ antialias: high, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, high ? 1.5 : 1.25));
@@ -81,9 +86,10 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
   const sculpture = new Group();
   scene.add(sculpture);
 
-  const violet = new Color(tokens.color.violet);
-  const violetDim = new Color(tokens.color.violetDim);
-  const lime = new Color(tokens.color.lime);
+  const blue = new Color(pal.blue);
+  const blueDim = new Color(pal.blueDim);
+  const lime = new Color(pal.lime);
+  const ink = new Color(isLight ? pal.text1 : '#F2F4F9');
 
   /* ---- core: noise-deformed, fresnel rim, faint iridescence ---- */
   const coreGeo = new IcosahedronGeometry(1.15, high ? 48 : 24);
@@ -94,8 +100,9 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
       uAssemble: { value: 0 },
       uDissolve: { value: 0 },
       uPulse: { value: 0 },
-      uViolet: { value: violet },
-      uDim: { value: violetDim },
+      uAccent: { value: blue },
+      uDim: { value: blueDim },
+      uLight: { value: isLight ? 1 : 0 },
     },
     vertexShader: /* glsl */ `
       ${NOISE}
@@ -113,7 +120,7 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
         gl_Position = projectionMatrix * mv;
       }`,
     fragmentShader: /* glsl */ `
-      uniform float uAssemble; uniform float uDissolve; uniform vec3 uViolet; uniform vec3 uDim;
+      uniform float uAssemble; uniform float uDissolve; uniform vec3 uAccent; uniform vec3 uDim; uniform float uLight;
       varying vec3 vN; varying vec3 vView; varying float vNoise;
       void main(){
         float fres = pow(1.0 - max(dot(vN, vView), 0.0), 2.2);
@@ -121,7 +128,8 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
         float key = max(dot(vN, normalize(vec3(-0.6, 0.7, 0.5))), 0.0);
         float fill = max(dot(vN, normalize(vec3(0.4, -0.8, 0.3))), 0.0) * 0.25;
         vec3 irid = 0.5 + 0.5 * cos(6.2831 * (fres * 0.6 + vNoise * 0.15 + vec3(0.0, 0.33, 0.67)));
-        vec3 col = vec3(0.045, 0.043, 0.06) + uDim * (key * 0.35 + fill) + uViolet * fres * 1.1 + irid * fres * 0.18;
+        vec3 base = mix(vec3(0.04, 0.047, 0.066), vec3(0.80, 0.86, 0.97), uLight);
+        vec3 col = base + uDim * (key * 0.35 + fill) * (1.0 - uLight * 0.6) + uAccent * fres * mix(1.1, 0.9, uLight) + irid * fres * mix(0.18, 0.06, uLight);
         float a = (0.35 + fres * 0.65) * smoothstep(0.0, 0.6, uAssemble) * (1.0 - uDissolve);
         gl_FragColor = vec4(col, a);
       }`,
@@ -131,9 +139,9 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
 
   /* ---- orbital rings ---- */
   const ringSpecs = [
-    { r: 1.75, tilt: [1.2, 0.2, 0], speed: 0.12, color: violet, op: 0.55 },
-    { r: 2.15, tilt: [0.4, 0.9, 0.3], speed: -0.08, color: violetDim, op: 0.5 },
-    { r: 2.55, tilt: [1.6, -0.5, 0.6], speed: 0.05, color: new Color(tokens.color.text2), op: 0.18 },
+    { r: 1.75, tilt: [1.2, 0.2, 0], speed: 0.12, color: blue, op: 0.55 },
+    { r: 2.15, tilt: [0.4, 0.9, 0.3], speed: -0.08, color: blueDim, op: 0.5 },
+    { r: 2.55, tilt: [1.6, -0.5, 0.6], speed: 0.05, color: new Color(pal.text2), op: isLight ? 0.3 : 0.18 },
   ];
   const rings = ringSpecs.map((s) => {
     const geo = new TorusGeometry(s.r, 0.0065, 6, high ? 220 : 140);
@@ -163,7 +171,7 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
   const pMat = new ShaderMaterial({
     transparent: true,
     depthWrite: false,
-    blending: AdditiveBlending,
+    blending: glowBlend,
     uniforms: {
       uTime: { value: 0 },
       uGather: { value: 0 },
@@ -171,8 +179,9 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
       uPointer: { value: new Vector3(99, 99, 0) },
       uPulse: { value: 0 },
       uPx: { value: renderer.getPixelRatio() },
-      uViolet: { value: violet },
+      uAccent: { value: blue },
       uLime: { value: lime },
+      uInk: { value: ink },
     },
     vertexShader: /* glsl */ `
       attribute vec3 aHome; attribute float aSeed;
@@ -201,14 +210,14 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
         vA = (0.25 + 0.75 * g) * (1.0 - uScatter * 0.6);
       }`,
     fragmentShader: /* glsl */ `
-      uniform vec3 uViolet; uniform vec3 uLime;
+      uniform vec3 uAccent; uniform vec3 uLime; uniform vec3 uInk;
       varying float vSeed; varying float vA;
       void main(){
         vec2 c = gl_PointCoord - 0.5;
         float d = length(c);
         if (d > 0.5) discard;
         float a = smoothstep(0.5, 0.0, d) * vA;
-        vec3 col = vSeed > 0.985 ? uLime : mix(uViolet, vec3(0.95, 0.94, 0.97), step(0.8, vSeed) * 0.5);
+        vec3 col = vSeed > 0.985 ? uLime : mix(uAccent, uInk, step(0.8, vSeed) * 0.5);
         gl_FragColor = vec4(col, a * 0.85);
       }`,
   });
@@ -221,10 +230,10 @@ export function createHeroScene(host: HTMLElement, quality: HeroQuality): HeroSc
   const lightMat = new ShaderMaterial({
     transparent: true,
     depthWrite: false,
-    blending: AdditiveBlending,
-    uniforms: { uA: { value: 0 }, uPx: { value: renderer.getPixelRatio() } },
+    blending: glowBlend,
+    uniforms: { uA: { value: 0 }, uPx: { value: renderer.getPixelRatio() }, uCol: { value: isLight ? blue : new Color('#F2F0FF') } },
     vertexShader: `uniform float uPx; void main(){ gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); gl_PointSize = 90.0 * uPx; }`,
-    fragmentShader: `uniform float uA; void main(){ float d = length(gl_PointCoord - 0.5); float a = exp(-d * 14.0) + exp(-d * 4.0) * 0.25; gl_FragColor = vec4(vec3(0.95,0.93,1.0), a * uA); }`,
+    fragmentShader: `uniform float uA; uniform vec3 uCol; void main(){ float d = length(gl_PointCoord - 0.5); float a = exp(-d * 14.0) + exp(-d * 4.0) * 0.25; gl_FragColor = vec4(uCol, a * uA); }`,
   });
   const light = new Points(lightGeo, lightMat);
   sculpture.add(light);

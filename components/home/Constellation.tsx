@@ -69,14 +69,14 @@ export default function Constellation({ items }: { items: Item[] }) {
   return (
     <div className="constellation" aria-hidden="true">
       <svg ref={svg} viewBox="-220 -200 440 400">
-        <ellipse cx="0" cy="10" rx="150" ry="70" fill="none" stroke="var(--graphite)" strokeDasharray="2 6" />
-        <circle cx="0" cy="10" r="3" fill="var(--accent-violet)" />
+        <ellipse cx="0" cy="10" rx="150" ry="70" style={{ fill: 'none', stroke: 'var(--graphite)' }} strokeDasharray="2 6" />
+        <circle cx="0" cy="10" r="3" style={{ fill: 'var(--accent-blue)' }} />
         {items.map((_, i) => (
-          <line key={i} className="c-link" stroke="var(--graphite)" strokeWidth="1" />
+          <line key={i} className="c-link" style={{ stroke: 'var(--graphite)' }} strokeWidth="1" />
         ))}
         {items.map((s, i) => (
           <g key={s.slug} className="c-node">
-            <path d={glyphPath(s.glyph)} transform="scale(1.6)" fill="var(--bg-0)" stroke={i === active ? 'var(--accent-violet)' : 'var(--text-3)'} strokeWidth="0.8" />
+            <path d={glyphPath(s.glyph)} transform="scale(1.6)" style={{ fill: 'var(--bg-0)', stroke: i === active ? 'var(--accent-blue)' : 'var(--text-3)' }} strokeWidth="0.8" />
           </g>
         ))}
         <text x="0" y="-150" textAnchor="middle" className="c-label">[{current.index}] {current.name}</text>

@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 import type { WorldKind } from '@/lib/content';
-import { detectTier } from '@/lib/prefs';
-import { tokens } from '@/lib/tokens';
+import { detectTier, onThemeChange, resolvedTheme } from '@/lib/prefs';
+import { palette, type Palette } from '@/lib/tokens';
 
 // Per-project visual worlds on a 2D canvas: cheaper than a WebGL context per
 // project, and enough for a metaphor. Each world reacts to the pointer (or a
@@ -18,7 +18,7 @@ import { tokens } from '@/lib/tokens';
 //   pulse    Care Dental / lab — a rhythm line; the pointer raises amplitude
 
 type P = { x: number; y: number; active: boolean };
-type Ctx = { c: CanvasRenderingContext2D; w: number; h: number; t: number; p: P; tint: string; low: boolean };
+type Ctx = { c: CanvasRenderingContext2D; w: number; h: number; t: number; p: P; tint: string; low: boolean; pal: Palette; light: boolean };
 type World = { step: (k: Ctx) => void };
 
 const rgba = (hex: string, a: number) => {
@@ -31,7 +31,7 @@ function bubbles(w: number, h: number, low: boolean): World {
   const n = low ? 40 : 80;
   const bs = Array.from({ length: n }, () => ({ x: rand(0, w), y: rand(0, h), r: rand(1.5, 9), v: rand(0.25, 1.1), ph: rand(0, 6.28) }));
   return {
-    step({ c, w, h, t, p, tint }) {
+    step({ c, w, h, t, p, tint, pal }) {
       for (const b of bs) {
         b.y -= b.v;
         b.x += Math.sin(t * 0.0015 + b.ph) * 0.35;
@@ -47,7 +47,7 @@ function bubbles(w: number, h: number, low: boolean): World {
         c.stroke();
         c.beginPath();
         c.arc(b.x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.22, 0, Math.PI * 2);
-        c.fillStyle = rgba(tokens.color.text1, 0.18);
+        c.fillStyle = rgba(pal.text1, 0.18);
         c.fill();
       }
     },
@@ -109,7 +109,7 @@ function circuit(w: number, h: number, low: boolean): World {
     return tr.pts[tr.pts.length - 1];
   };
   return {
-    step({ c, p, tint }) {
+    step({ c, p, tint, pal }) {
       c.lineWidth = 1;
       for (const tr of traces) {
         c.beginPath();
@@ -120,7 +120,7 @@ function circuit(w: number, h: number, low: boolean): World {
           const lit = p.active && Math.hypot(x - p.x, y - p.y) < 90;
           c.beginPath();
           c.arc(x, y, lit ? 4 : 2.5, 0, Math.PI * 2);
-          c.fillStyle = lit ? rgba(tokens.color.lime, 0.9) : rgba(tint, 0.5);
+          c.fillStyle = lit ? rgba(pal.lime, 0.95) : rgba(tint, 0.5);
           c.fill();
         }
       }
@@ -140,11 +140,12 @@ function circuit(w: number, h: number, low: boolean): World {
 }
 
 function shade(w: number, h: number, low: boolean): World {
-  const shades = ['#C9A3A8', '#B88A84', '#9E6F6A', '#D8B9AE', '#7E5A63', '#A78BFA'];
+  const shades = ['#C9A3A8', '#B88A84', '#9E6F6A', '#D8B9AE', '#7E5A63', '#8FA9D8'];
   const blobs = Array.from({ length: low ? 6 : 10 }, (_, i) => ({ x: rand(0.1, 0.9) * w, y: rand(0.15, 0.85) * h, r: rand(0.12, 0.26) * Math.min(w, h) + 40, col: shades[i % shades.length], ph: rand(0, 6.28), sp: rand(0.0002, 0.0005) }));
   return {
-    step({ c, w, h, t, p }) {
-      c.globalCompositeOperation = 'lighter';
+    step({ c, w, h, t, p, light }) {
+      // 'lighter' glows on dark; on a light ground it would wash out to white
+      c.globalCompositeOperation = light ? 'multiply' : 'lighter';
       for (const b of blobs) {
         let x = b.x + Math.sin(t * b.sp + b.ph) * w * 0.06, y = b.y + Math.cos(t * b.sp * 1.3 + b.ph) * h * 0.06;
         if (p.active) { x += (p.x - x) * 0.12; y += (p.y - y) * 0.12; }
@@ -168,7 +169,7 @@ function shade(w: number, h: number, low: boolean): World {
 function steam(w: number, h: number, low: boolean): World {
   const wisps = Array.from({ length: low ? 6 : 11 }, (_, i) => ({ x: w * 0.5 + (i - 5) * 9, ph: rand(0, 6.28), sp: rand(0.0006, 0.0012), amp: rand(14, 34) }));
   return {
-    step({ c, w, h, t, p, tint }) {
+    step({ c, w, h, t, p, tint, pal }) {
       const base = h * 0.82;
       c.lineWidth = 1.2;
       for (const s of wisps) {
@@ -183,7 +184,7 @@ function steam(w: number, h: number, low: boolean): World {
         c.stroke();
       }
       // cup
-      c.strokeStyle = rgba(tokens.color.text2, 0.5);
+      c.strokeStyle = rgba(pal.text2, 0.5);
       c.beginPath();
       c.moveTo(w * 0.5 - 46, base + 6);
       c.quadraticCurveTo(w * 0.5, base + 74, w * 0.5 + 46, base + 6);
@@ -227,6 +228,8 @@ export default function WorldCanvas({ kind, tint }: { kind: WorldKind; tint: str
     const still = tier === 'static';
     const dpr = Math.min(window.devicePixelRatio || 1, low ? 1.25 : 1.5);
     const p: P = { x: 0, y: 0, active: false };
+    let light = resolvedTheme() === 'light';
+    let pal = palette(light ? 'light' : 'dark');
     let world!: World;
     let w = 0, h = 0, raf = 0, visible = false, t0 = performance.now();
 
@@ -241,7 +244,7 @@ export default function WorldCanvas({ kind, tint }: { kind: WorldKind; tint: str
     };
     const frame = (now: number) => {
       c.clearRect(0, 0, w, h);
-      world.step({ c, w, h, t: now - t0, p, tint, low });
+      world.step({ c, w, h, t: now - t0, p, tint, low, pal, light });
     };
     const loop = (now: number) => {
       frame(now);
@@ -259,7 +262,7 @@ export default function WorldCanvas({ kind, tint }: { kind: WorldKind; tint: str
     resize();
     if (still) {
       // advance a little so the still frame isn't the empty initial state
-      for (let i = 0; i < 90; i++) world.step({ c, w, h, t: i * 16, p, tint, low });
+      for (let i = 0; i < 90; i++) world.step({ c, w, h, t: i * 16, p, tint, low, pal, light });
       c.clearRect(0, 0, w, h);
       frame(1600);
     }
@@ -272,6 +275,11 @@ export default function WorldCanvas({ kind, tint }: { kind: WorldKind; tint: str
     const ro = new ResizeObserver(() => { resize(); if (still) frame(1600); });
     ro.observe(canvas);
     const onVis = () => (document.hidden ? stop() : start());
+    const offTheme = onThemeChange(() => {
+      light = resolvedTheme() === 'light';
+      pal = palette(light ? 'light' : 'dark');
+      if (still) frame(1600);
+    });
     document.addEventListener('visibilitychange', onVis);
 
     const host = canvas.parentElement ?? canvas;
@@ -298,6 +306,7 @@ export default function WorldCanvas({ kind, tint }: { kind: WorldKind; tint: str
       io.disconnect();
       ro.disconnect();
       clearTimeout(tapTimer);
+      offTheme();
       document.removeEventListener('visibilitychange', onVis);
       host.removeEventListener('pointermove', move);
       host.removeEventListener('pointerleave', leave);

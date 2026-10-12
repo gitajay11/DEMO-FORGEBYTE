@@ -68,7 +68,7 @@ export default function IdeaField() {
     <div className="idea-field" ref={field}>
       <svg aria-hidden="true">
         {LINKS.map((_, i) => (
-          <line key={i} ref={(l) => { lines.current[i] = l; }} stroke="var(--accent-violet-dim)" strokeWidth="1" strokeDasharray="3 4" style={{ opacity: 0 }} />
+          <line key={i} ref={(l) => { lines.current[i] = l; }} strokeWidth="1" strokeDasharray="3 4" style={{ opacity: 0, stroke: 'var(--accent-blue-dim)' }} />
         ))}
       </svg>
       {NODES.map((n, i) => (

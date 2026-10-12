@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { detectTier } from '@/lib/prefs';
+import { detectTier, onThemeChange, resolvedTheme } from '@/lib/prefs';
 import type { HeroScene } from '@/scenes/hero';
 
 const SEEN = 'fb-hero-seen';
@@ -30,6 +30,13 @@ export default function HeroStage() {
     const instant = seen || tier === 'static';
 
     let scene: HeroScene | null = null;
+    let buildScene: (() => void) | null = null;
+    let themeNow = resolvedTheme();
+    // Rebuild the scene when the theme flips (blending and colours differ)
+    const offTheme = onThemeChange(() => {
+      const t = resolvedTheme();
+      if (t !== themeNow) { themeNow = t; buildScene?.(); }
+    });
     let disposed = false;
     let introRaf = 0;
     let startedAt = 0;
@@ -52,10 +59,14 @@ export default function HeroStage() {
       if (tier === 'static') return;
       const { createHeroScene } = await import('@/scenes/hero');
       if (disposed) return;
-      scene = createHeroScene(host, tier);
-      host.dataset.ready = 'true';
-      if (instant || hero.dataset.stage === 'idle') scene.setIntro(1);
-      onScroll();
+      buildScene = () => {
+        scene?.dispose();
+        scene = createHeroScene(host, tier, resolvedTheme());
+        host.dataset.ready = 'true';
+        if (instant || hero.dataset.stage === 'idle') scene.setIntro(1);
+        onScroll();
+      };
+      buildScene();
     };
 
     const runSequence = () => {
@@ -105,6 +116,7 @@ export default function HeroStage() {
 
     return () => {
       disposed = true;
+      offTheme();
       timers.forEach(clearTimeout);
       cancelAnimationFrame(introRaf);
       window.removeEventListener('intro:done', begin);
