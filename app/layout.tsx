@@ -1,27 +1,32 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION } from '@/lib/site';
+import Nav from '@/components/site/Nav';
+import Footer from '@/components/site/Footer';
+import Cursor from '@/components/site/Cursor';
+import SiteEffects from '@/components/site/SiteEffects';
+import ChatWidget from '@/components/ChatWidget';
+import IntroOverlay from '@/components/IntroOverlay';
 import './globals.css';
 
-// Self-hosted at build time by next/font — replaces the render-blocking
-// <link> to fonts.googleapis.com the static page used.
-const inter = Inter({
+// Self-hosted and subset by next/font; only the weights actually used.
+const grotesk = Space_Grotesk({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-sans',
   display: 'swap',
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const mono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['400', '500'],
   variable: '--font-mono',
   display: 'swap',
+  preload: false,
 });
 
 export const metadata: Metadata = {
-  // Resolves every relative URL below, and lets Next emit absolute og:image
-  // URLs — social crawlers reject relative ones.
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_TITLE,
@@ -29,7 +34,6 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  // Tells Google which host is authoritative, since the apex redirects here
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
@@ -58,18 +62,32 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#060907',
+  themeColor: '#0B0B0E',
+  colorScheme: 'dark',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+// Runs before first paint: marks JS as available (CSS only hides reveal
+// targets when it is) and applies the stored motion / cursor toggles.
+const PREFS_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('js');try{var m=localStorage.getItem('fb-motion');if(m)d.dataset.motion=m;var c=localStorage.getItem('fb-cursor');d.dataset.cursor=c||'custom';}catch(e){d.dataset.cursor='custom';}})();`;
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      {/* intro-lock is removed by IntroOverlay once the intro finishes */}
-      <body className="intro-lock">{children}</body>
+    <html lang="en" className={`${grotesk.variable} ${mono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: PREFS_SCRIPT }} />
+      </head>
+      {/* intro-lock is removed by IntroOverlay once the ABI intro finishes */}
+      <body className="intro-lock">
+        <IntroOverlay />
+        <a href="#main" className="skip-link">Skip to content</a>
+        <Nav />
+        <main id="main" tabIndex={-1}>{children}</main>
+        <Footer />
+        <ChatWidget />
+        <Cursor />
+        <SiteEffects />
+        <Analytics />
+      </body>
     </html>
   );
 }

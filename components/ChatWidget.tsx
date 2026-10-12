@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { WHATSAPP_URL } from '@/lib/site';
 
 type Topic = { id: string; question: string; answer: string };
@@ -13,37 +14,37 @@ const TOPICS: Topic[] = [
     id: 'services',
     question: 'What do you build?',
     answer:
-      'Four kinds of engagement: full web application builds, API and backend systems, MVP sprints to validate an idea, and ongoing support after launch. If it runs in a browser and needs a real backend, it is probably in scope.',
+      'Five things: web applications, APIs and backend systems, MVP sprints to test an idea, AI features inside products, and ongoing support after launch. Each service page also says when we are the wrong choice.',
   },
   {
     id: 'stack',
     question: 'What stack do you use?',
     answer:
-      'Next.js and TypeScript on the front, Node.js with PostgreSQL or Supabase behind it, Prisma for data access, Stripe where payments are involved, and Docker plus Vercel to ship. One opinionated stack, so every project starts from proven ground.',
+      'Usually TypeScript with Next.js or React, Node and PostgreSQL behind it, deployed on Vercel. Payments through Razorpay where needed. We pick what your team can maintain, not what is fashionable.',
   },
   {
     id: 'timeline',
     question: 'How long does a project take?',
     answer:
-      'MVP sprints are measured in weeks, not months. Bigger builds get split into milestones so you see working software every week rather than only at the end.',
+      'Most builds land between 3 and 12 weeks; MVP sprints are usually 4 to 6. You get a firm timeline in the written scope before any work starts.',
   },
   {
     id: 'process',
     question: 'How does a project run?',
     answer:
-      'Four stages. Discover — a short call to pin down scope and success criteria. Design and Build — iterative, with weekly check-ins. Test and Ship — QA, performance checks, deploy. Support — a window after launch to fix what comes up.',
+      'Five stages: Discover (a short call), Define (a written scope with a fixed quote), Design and build (weekly previews), Test and ship, then Support. Each stage ends with something you can hold.',
   },
   {
     id: 'pricing',
     question: 'What does it cost?',
     answer:
-      'Every build is scoped on its own — an MVP sprint and a long-running product are very different numbers. Tell me roughly what you are building and you will get a fixed quote back, usually within a day.',
+      'Every build is scoped on its own, so there is no price list. Describe the project and you get a fixed quote in writing.',
   },
   {
     id: 'work',
     question: 'Can I see past work?',
     answer:
-      'Yes — Loopa, a sparkling drinks brand site with a distributor bulk-order flow, and Nutriyah, the parent food and beverage company site. Both are live and linked in the Work section above.',
+      'Yes: Loopa and Nutriyah are live, Sri Cauvery Electronics is under testing, and Élaré Beauty is in progress. Each has a case study under Work.',
   },
 ];
 
@@ -53,7 +54,15 @@ const GREETING =
 type Message = { id: number; from: 'bot' | 'user'; text: string };
 
 export default function ChatWidget() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+
+  // Other parts of the site (the Lab page) can open the chat
+  useEffect(() => {
+    const openChat = () => setOpen(true);
+    window.addEventListener('chat:open', openChat);
+    return () => window.removeEventListener('chat:open', openChat);
+  }, []);
   const [messages, setMessages] = useState<Message[]>([
     { id: 0, from: 'bot', text: GREETING },
   ]);
@@ -209,7 +218,9 @@ export default function ChatWidget() {
 
   const goToContact = () => {
     setOpen(false);
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    const form = document.getElementById('contact');
+    if (form) form.scrollIntoView({ behavior: 'smooth' });
+    else router.push('/contact');
   };
 
   return (

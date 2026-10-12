@@ -1,0 +1,76 @@
+/* Design tokens. Mirrored in lib/tokens.ts so the canvas scenes read the
+   same values — change both together. */
+:root{
+  /* surfaces */
+  --bg-0:#0B0B0E;
+  --bg-1:#121218;
+  --bg-2:#1A1A22;
+  --graphite:#2A2A33;
+
+  /* text */
+  --text-1:#F2F0F6;
+  --text-2:#B9B5C4;
+  --text-3:#8A8698; /* brief's #7C7889 lifted to clear 4.5:1 on --bg-0 */
+
+  /* accents */
+  --accent-violet:#A78BFA;
+  --accent-violet-dim:#6D5BA8;
+  --accent-lime:#D5FF70;
+  --danger:#FF6B6B;
+  --on-accent:#0B0B0E;
+
+  /* lines */
+  --border:rgba(242,240,246,0.08);
+  --border-strong:rgba(242,240,246,0.16);
+  --border-hair:rgba(242,240,246,0.05);
+
+  /* type */
+  --font-sans-stack:var(--font-sans), 'Space Grotesk', system-ui, sans-serif;
+  --font-mono-stack:var(--font-mono), 'JetBrains Mono', ui-monospace, monospace;
+  --fs-display-xl:clamp(3.5rem, 11vw, 11rem);
+  --fs-display-l:clamp(2.5rem, 6vw, 6rem);
+  --fs-h3:clamp(1.5rem, 2.4vw, 2.25rem);
+  --fs-body-l:1.25rem;
+  --fs-body:clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+  --fs-mono:0.75rem;
+
+  /* spacing — 4px base */
+  --s-1:4px; --s-2:8px; --s-3:12px; --s-4:16px; --s-5:24px; --s-6:32px;
+  --s-7:48px; --s-8:64px; --s-9:96px; --s-10:128px; --s-11:192px;
+
+  /* layout */
+  --max:1440px;
+  --margin:clamp(16px, 4vw, 64px);
+  --gutter:24px;
+  --measure:62ch;
+  --nav-h:72px;
+
+  /* radii — most surfaces are square */
+  --r-0:0; --r-input:4px; --r-pill:999px;
+
+  /* motion */
+  --dur-micro:120ms;
+  --dur-short:240ms;
+  --dur-base:480ms;
+  --dur-long:900ms;
+  --dur-scene:2000ms;
+  --ease-out:cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:cubic-bezier(0.65, 0, 0.35, 1);
+  --stagger-char:40ms;
+  --stagger-word:80ms;
+  --stagger-block:120ms;
+
+  /* layers */
+  --z-scene:0;
+  --z-content:1;
+  --z-nav:50;
+  --z-menu:60;
+  --z-chat:70;
+  --z-cursor:90;
+  --z-transition:95;
+  --z-intro:100;
+}
+
+@media (max-width:767px){
+  :root{ --gutter:16px; --nav-h:64px; }
+}

@@ -1,6 +1,6 @@
 // HTML email templates for the contact form. Everything is inline-styled and
 // table-based because that is still what mail clients reliably render; the
-// palette borrows the site's #39FF88 accent, but on a light neutral ground —
+// palette borrows the site's lime (#D5FF70) and violet accents, but on a light neutral ground —
 // a full-bleed dark email reads as a wall of black in Gmail, and light stays
 // readable in every client, including ones that ignore dark-mode hints.
 
@@ -9,7 +9,10 @@ import { CONTACT_EMAIL, SITE_NAME, SITE_URL, WHATSAPP_URL } from './site';
 export type Enquiry = {
   name: string;
   email: string;
-  projectType: string;
+  company: string;
+  needs: string[];
+  budget: string;
+  timeline: string;
   message: string;
   /** Short id shown in both emails so a reply can be matched to the enquiry. */
   reference: string;
@@ -41,8 +44,10 @@ function label(text: string, mb = 12): string {
 
 const C = {
   bg: '#F3F6F4',
-  accent: '#39FF88',
-  accentOn: '#04140B',
+  accent: '#D5FF70',
+  violet: '#A78BFA',
+  violetInk: '#5B4A9E', // violet that passes 4.5:1 on white
+  accentOn: '#0B0B0E',
   text: '#111814',
   muted: '#6B7A70',
   cardBg: '#FFFFFF',
@@ -71,8 +76,8 @@ function button(href: string, label: string, primary = true): string {
   // Neon green text on the white card fails contrast, so the ghost variant
   // uses the darker green the eyebrow labels use.
   const bg = primary ? C.accent : 'transparent';
-  const color = primary ? C.accentOn : '#1E9A55';
-  const border = primary ? C.accent : '#BFE3CD';
+  const color = primary ? C.accentOn : C.violetInk;
+  const border = primary ? C.accent : '#D9CFF7';
   return `<a href="${esc(href)}" style="display:inline-block;padding:12px 20px;border-radius:8px;background:${bg};color:${color};border:1px solid ${border};font-family:${MONO};font-size:13px;font-weight:600;text-decoration:none;letter-spacing:0.01em;">${esc(label)}</a>`;
 }
 
@@ -103,7 +108,7 @@ function frame(opts: { preheader: string; eyebrow: string; title: string; body: 
 
   <!-- card -->
   <tr><td style="background:${C.cardBg};border-radius:14px;border:1px solid #DDE6E0;padding:32px 32px 28px;">
-    <div style="font-family:${MONO};font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#1E9A55;margin-bottom:12px;">${esc(opts.eyebrow)}</div>
+    <div style="font-family:${MONO};font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${C.violetInk};margin-bottom:12px;">${esc(opts.eyebrow)}</div>
     <h1 style="margin:0 0 18px;font-family:${FONT};font-size:24px;line-height:1.25;font-weight:700;color:${C.cardText};letter-spacing:-0.02em;">${esc(opts.title)}</h1>
     ${opts.body}
   </td></tr>
@@ -138,7 +143,8 @@ ${rows
 /* ------------------------------------------------------------------ */
 
 export function studioNotification(e: Enquiry): { subject: string; text: string; html: string } {
-  const subject = `New enquiry from ${e.name}${e.projectType ? ` — ${e.projectType}` : ''} [${e.reference}]`;
+  const what = e.needs.length ? e.needs.join(', ') : '';
+  const subject = `New enquiry from ${e.name}${e.company ? ` (${e.company})` : ''}${what ? ` — ${what}` : ''} [${e.reference}]`;
   const mailto = `mailto:${e.email}?subject=${encodeURIComponent(`Re: your ${SITE_NAME} enquiry`)}`;
 
   const text = [
@@ -146,7 +152,10 @@ export function studioNotification(e: Enquiry): { subject: string; text: string;
     '',
     `Name:          ${e.name}`,
     `Email:         ${e.email}`,
-    `Project type:  ${e.projectType || '—'}`,
+    `Company:       ${e.company || '—'}`,
+    `Needs:         ${what || '—'}`,
+    `Budget:        ${e.budget || '—'}`,
+    `Timeline:      ${e.timeline || '—'}`,
     '',
     'Message:',
     e.message,
@@ -162,11 +171,14 @@ export function studioNotification(e: Enquiry): { subject: string; text: string;
       ${detailRows([
         ['Reference', `<span style="font-family:${MONO};">${esc(e.reference)}</span> &middot; ${esc(formatReceived(e.receivedAt))}`],
         ['Name', esc(e.name)],
-        ['Email', `<a href="mailto:${esc(e.email)}" style="color:#1E9A55;text-decoration:none;">${esc(e.email)}</a>`],
-        ['Project type', esc(e.projectType || '—')],
+        ['Email', `<a href="mailto:${esc(e.email)}" style="color:${C.violetInk};text-decoration:none;">${esc(e.email)}</a>`],
+        ['Company', esc(e.company || '—')],
+        ['Needs', esc(what || '—')],
+        ['Budget', esc(e.budget || '—')],
+        ['Timeline', esc(e.timeline || '—')],
       ])}
       <div style="font-family:${MONO};font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:${C.cardMuted};margin:0 0 8px;">Message</div>
-      <div style="font-family:${FONT};font-size:15px;line-height:1.65;color:${C.cardText};padding:16px 18px;border-left:3px solid ${C.accent};background:#F6F9F7;border-radius:0 8px 8px 0;margin:0 0 24px;">${nl2br(e.message)}</div>
+      <div style="font-family:${FONT};font-size:15px;line-height:1.65;color:${C.cardText};padding:16px 18px;border-left:3px solid ${C.violet};background:#F6F9F7;border-radius:0 8px 8px 0;margin:0 0 24px;">${nl2br(e.message)}</div>
       ${button(mailto, `Reply to ${e.name.split(' ')[0]} →`)}
     `,
     footer: `Sent from the contact form on <a href="${SITE_URL}" style="color:${C.muted};">${SITE_URL.replace(/^https?:\/\//, '')}</a>. Replying to this email goes straight to ${esc(e.name)}.`,
@@ -184,7 +196,7 @@ export function visitorConfirmation(e: Enquiry): { subject: string; text: string
   const first = e.name.trim().split(/\s+/)[0] || 'there';
   const subject = `Got your message, ${first} — ${SITE_NAME} [${e.reference}]`;
   const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(
-    `Re: ${e.reference} — ${e.projectType || 'my project'}`
+    `Re: ${e.reference} — ${e.needs[0] || 'my project'}`
   )}`;
 
   const text = [
@@ -198,7 +210,7 @@ export function visitorConfirmation(e: Enquiry): { subject: string; text: string
     '  3. If it fits, we book a short discovery call to define scope.',
     '',
     'Here is what you sent:',
-    `Project type: ${e.projectType || '—'}`,
+    `Needs: ${e.needs.join(', ') || '—'}`,
     e.message,
     '',
     `Need to reach me sooner? WhatsApp: ${WHATSAPP_URL}`,
@@ -223,7 +235,7 @@ ${steps
     const last = i === steps.length - 1;
     const badge = done
       ? `background:${C.accent};color:${C.accentOn};`
-      : `background:#FFFFFF;color:#1E9A55;border:1.5px solid #BFE3CD;`;
+      : `background:#FFFFFF;color:${C.violetInk};border:1.5px solid #D9CFF7;`;
     const connector = last
       ? ''
       : `<tr><td style="height:30px;"><div style="width:2px;height:30px;margin:0 auto;background:#DDE6E0;"></div></td></tr>`;
@@ -245,7 +257,7 @@ ${steps
   const tile = (href: string, heading: string, sub: string) =>
     `<td style="width:33.33%;padding:0 5px;vertical-align:top;">
   <a href="${esc(href)}" style="display:block;text-decoration:none;padding:14px 12px;border:1px solid #DDE6E0;border-radius:10px;background:#FFFFFF;">
-    <div style="font-family:${MONO};font-size:12px;font-weight:600;color:#1E9A55;margin-bottom:4px;">${esc(heading)} &rarr;</div>
+    <div style="font-family:${MONO};font-size:12px;font-weight:600;color:${C.violetInk};margin-bottom:4px;">${esc(heading)} &rarr;</div>
     <div style="font-family:${FONT};font-size:12px;line-height:1.45;color:${C.cardMuted};">${esc(sub)}</div>
   </a>
 </td>`;
@@ -257,7 +269,7 @@ ${steps
     body: `
       <!-- reference pill -->
       <table role="presentation" cellpadding="0" cellspacing="0" style="margin:-6px 0 22px;"><tr>
-        <td style="padding:6px 12px;border-radius:999px;background:#E9FBF0;border:1px solid #BFE3CD;font-family:${MONO};font-size:12px;color:#146B3A;">
+        <td style="padding:6px 12px;border-radius:999px;background:#F3EFFF;border:1px solid #D9CFF7;font-family:${MONO};font-size:12px;color:${C.violetInk};">
           <span style="display:inline-block;width:7px;height:7px;border-radius:4px;background:${C.accent};margin-right:7px;vertical-align:middle;"></span>Ref&nbsp;<strong>${esc(e.reference)}</strong>
         </td>
       </tr></table>
@@ -270,8 +282,8 @@ ${steps
       ${timeline}
 
       ${label('Your message', 10)}
-      <div style="padding:16px 18px;border-left:3px solid ${C.accent};background:#F6F9F7;border-radius:0 8px 8px 0;margin:0 0 26px;">
-        <span style="display:inline-block;padding:3px 9px;border-radius:999px;background:#FFFFFF;border:1px solid #DDE6E0;font-family:${MONO};font-size:11px;color:#1E9A55;margin-bottom:10px;">${esc(e.projectType || 'Project')}</span>
+      <div style="padding:16px 18px;border-left:3px solid ${C.violet};background:#F6F9F7;border-radius:0 8px 8px 0;margin:0 0 26px;">
+        <span style="display:inline-block;padding:3px 9px;border-radius:999px;background:#FFFFFF;border:1px solid #DDE6E0;font-family:${MONO};font-size:11px;color:${C.violetInk};margin-bottom:10px;">${esc(e.needs.join(' · ') || 'Your project')}</span>
         <div style="font-family:${FONT};font-size:14px;line-height:1.65;color:${C.cardText};">${nl2br(e.message)}</div>
       </div>
 
@@ -290,7 +302,7 @@ ${steps
 
       <!-- signature -->
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #EEF3F0;padding-top:18px;"><tr>
-        <td style="width:40px;height:40px;border-radius:20px;background:#0F1612;text-align:center;vertical-align:middle;font-family:${MONO};font-size:14px;font-weight:700;color:${C.accent};">A</td>
+        <td style="width:40px;height:40px;border-radius:20px;background:#0B0B0E;text-align:center;vertical-align:middle;font-family:${MONO};font-size:14px;font-weight:700;color:${C.violet};">A</td>
         <td style="padding-left:12px;font-family:${FONT};line-height:1.4;">
           <div style="font-size:14px;font-weight:600;color:${C.cardText};">Ajay</div>
           <div style="font-size:12px;color:${C.cardMuted};">Founder &amp; developer, ${SITE_NAME}</div>

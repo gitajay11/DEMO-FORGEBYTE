@@ -10,7 +10,8 @@ export const dynamic = 'force-dynamic';
 
 const limiter = createRateLimiter(5, 10 * 60_000); // 5 per 10 minutes per IP
 
-const MAX = { name: 120, email: 254, project_type: 60, message: 5000 } as const;
+const MAX = { name: 120, email: 254, company: 120, budget: 40, timeline: 40, message: 5000 } as const;
+const MAX_NEEDS = 6;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 function field(data: FormData, name: keyof typeof MAX): string {
@@ -44,17 +45,25 @@ export async function POST(request: Request) {
   // Honeypot: real visitors never see this field. Pretend it worked so the
   // bot has nothing to learn from.
   if (data.get('_gotcha')) {
-    return Response.json({ ok: true });
+    return Response.json({ ok: true, reference: makeReference() });
   }
 
   const name = field(data, 'name');
   const email = field(data, 'email');
-  const projectType = field(data, 'project_type');
+  const company = field(data, 'company');
+  const budget = field(data, 'budget');
+  const timeline = field(data, 'timeline');
   const message = field(data, 'message');
+  const needs = data
+    .getAll('needs')
+    .filter((v): v is string => typeof v === 'string')
+    .map((v) => v.trim().slice(0, 40))
+    .filter(Boolean)
+    .slice(0, MAX_NEEDS);
 
   if (!name || !email || !message) {
     return Response.json(
-      { error: 'Name, email and project details are required.' },
+      { error: 'Name, email and a description of the problem are required.' },
       { status: 400 }
     );
   }
@@ -65,7 +74,10 @@ export async function POST(request: Request) {
   const enquiry = {
     name,
     email,
-    projectType,
+    company,
+    needs,
+    budget,
+    timeline,
     message,
     reference: makeReference(),
     receivedAt: new Date(),
@@ -99,5 +111,8 @@ export async function POST(request: Request) {
     }
   });
 
-  return Response.json({ ok: true }, { headers: { 'Cache-Control': 'no-store' } });
+  return Response.json(
+    { ok: true, reference: enquiry.reference },
+    { headers: { 'Cache-Control': 'no-store' } }
+  );
 }
